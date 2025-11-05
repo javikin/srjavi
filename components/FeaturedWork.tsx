@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n-context';
 import Image from 'next/image';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -19,6 +19,7 @@ interface ProjectProps {
 }
 
 function ProjectCard({ title, description, image, tags, link, index }: ProjectProps) {
+  const t = useTranslations('work');
   const cardRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 

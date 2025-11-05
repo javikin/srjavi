@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n-context';
 import MagneticButton from './MagneticButton';
 import LanguageSwitcher from './LanguageSwitcher';
 

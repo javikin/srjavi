@@ -1,12 +1,18 @@
-import { redirect } from 'next/navigation';
-import { headers } from 'next/headers';
+import Navigation from '@/components/Navigation';
+import Hero from '@/components/Hero';
+import Philosophy from '@/components/Philosophy';
+import FeaturedWork from '@/components/FeaturedWork';
+import Footer from '@/components/Footer';
+import PerformanceMonitor from '@/components/PerformanceMonitor';
 
-export default async function RootPage() {
-  const headersList = await headers();
-  const acceptLanguage = headersList.get('accept-language') || '';
-
-  // Simple detection: if Spanish is preferred, redirect to /es, otherwise /en
-  const preferredLocale = acceptLanguage.toLowerCase().includes('es') ? 'es' : 'en';
-
-  redirect(`/${preferredLocale}`);
+export default function Home() {
+  return (
+    <main className="relative">
+      <Navigation />
+      <Philosophy />
+      <FeaturedWork />
+      <Footer />
+      <PerformanceMonitor />
+    </main>
+  );
 }

@@ -4,7 +4,7 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { useTranslations } from 'next-intl';
+import { useTranslations } from '@/lib/i18n-context';
 import MagneticButton from './MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger);
