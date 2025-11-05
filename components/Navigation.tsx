@@ -2,9 +2,12 @@
 
 import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
 import MagneticButton from './MagneticButton';
+import LanguageSwitcher from './LanguageSwitcher';
 
 export default function Navigation() {
+  const t = useTranslations('nav');
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
@@ -18,9 +21,9 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { href: '#philosophy', label: 'Philosophy' },
-    { href: '#work', label: 'Work' },
-    { href: '#contact', label: 'Contact' },
+    { href: '#philosophy', label: t('philosophy') },
+    { href: '#work', label: t('work') },
+    { href: '#contact', label: t('contact') },
   ];
 
   return (
@@ -49,6 +52,8 @@ export default function Navigation() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center gap-8">
+              <LanguageSwitcher />
+
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.href}
@@ -71,7 +76,7 @@ export default function Navigation() {
                   animate={{ opacity: 1, scale: 1 }}
                   transition={{ duration: 0.5, delay: 0.3 }}
                 >
-                  Contact
+                  {t('contact')}
                 </motion.a>
               </MagneticButton>
             </div>
@@ -112,6 +117,8 @@ export default function Navigation() {
             className="fixed inset-0 z-40 md:hidden bg-background"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8">
+              <LanguageSwitcher />
+
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.href}
@@ -133,7 +140,7 @@ export default function Navigation() {
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.3, delay: 0.3 }}
               >
-                Contact
+                {t('contact')}
               </motion.a>
             </div>
           </motion.div>
