@@ -111,16 +111,7 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
       </motion.div>
 
       {/* Content */}
-      <div className={`space-y-6 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          <span className="text-sm font-medium gradient-text">{t('projectLabel')} {index + 1}</span>
-        </motion.div>
-
+      <div className={`space-y-6 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>        
         <motion.h3
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

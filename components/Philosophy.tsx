@@ -73,74 +73,29 @@ export default function Philosophy() {
       <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '-2s' }} />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12 py-32">
-        {/* Minimal Quote Section */}
-        <motion.div
-          ref={quoteRef}
-          className="mb-32"
-        >
-          <div className="relative py-24 px-8 md:px-16 text-center">
-            {/* Top line */}
-            <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        {/* Not Your Average Builder - Now as Hero */}
+        <div ref={contentRef} className="max-w-5xl mx-auto space-y-12">
+          {/* Title with YC badge */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="mb-8"
+          >
+            <div className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/30 mb-8">
+              <span className="text-sm font-medium gradient-text">YC Experience · 2 Weeks Avg · 10K+ Users</span>
+            </div>
+          </motion.div>
 
-            {/* Quote */}
-            <blockquote className="text-4xl md:text-5xl lg:text-7xl font-bold text-text-primary leading-tight max-w-5xl mx-auto">
-              {tHero('quote1')}
-              <br />
-              <span className="gradient-text">{tHero('quote2')}</span>
-            </blockquote>
-
-            {/* Subtitle info */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.5 }}
-              className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-8 text-text-secondary"
-            >
-              <span>{tHero('stat1')}</span>
-              <span className="hidden sm:block">·</span>
-              <span>{tHero('stat2')}</span>
-              <span className="hidden sm:block">·</span>
-              <span>{tHero('stat3')}</span>
-            </motion.div>
-
-            {/* CTA */}
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.7 }}
-              className="mt-12 flex flex-col sm:flex-row gap-4 justify-center"
-            >
-              <a
-                href="#contact"
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 text-center glow-purple"
-              >
-                {tHero('cta1')}
-              </a>
-              <a
-                href="#work"
-                className="px-8 py-4 rounded-full border-2 border-text-primary/20 text-text-primary font-medium hover:border-primary hover:text-primary transition-all duration-300 text-center"
-              >
-                {tHero('cta2')}
-              </a>
-            </motion.div>
-
-            {/* Bottom line */}
-            <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
-          </div>
-        </motion.div>
-
-        {/* Not Your Average Builder Section */}
-        <div ref={contentRef} className="max-w-4xl mx-auto space-y-12">
-          {/* Title */}
           <div>
-            <h2 className="text-4xl md:text-5xl font-bold text-text-primary mb-6">
+            <h1 className="text-4xl md:text-5xl font-bold text-text-primary mb-6 leading-tight">
               {t('title')}
-            </h2>
-            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary" />
+            </h1>
+            <div className="w-24 h-1 bg-gradient-to-r from-primary to-secondary mb-8" />
           </div>
 
           {/* Main content */}
-          <div className="space-y-8 text-xl md:text-2xl text-text-secondary leading-relaxed">
+          <div className="space-y-8 text-xl md:text-2xl text-text-secondary leading-relaxed max-w-3xl">
             <p>
               {t('p1')}
               <br />
@@ -148,7 +103,7 @@ export default function Philosophy() {
             </p>
 
             <p>
-              {t('p3_1')} <span className="text-text-primary font-semibold">$50K</span> {t('p3_2')}{' '}
+              {t('p3_1')} <span className="text-text-primary font-semibold">+$100K</span> {t('p3_2')}{' '}
               <span className="text-text-primary font-semibold">6 {t('p3_2') === 'and take' ? 'months' : 'meses'}</span>, {t('p3_3')}{' '}
               <span className="gradient-text font-bold">2 {t('p3_3').includes('ship') ? 'weeks' : 'semanas'}</span> {t('p3_4')}
             </p>
@@ -158,6 +113,27 @@ export default function Philosophy() {
               <span className="text-text-primary font-semibold">{t('p4_2')}</span>
             </p>
           </div>
+
+          {/* CTAs */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.5 }}
+            className="flex flex-col sm:flex-row gap-4 pt-8"
+          >
+            <a
+              href="#contact"
+              className="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 text-center glow-purple"
+            >
+              {tHero('cta1')}
+            </a>
+            <a
+              href="#work"
+              className="px-8 py-4 rounded-full border-2 border-text-primary/20 text-text-primary font-medium hover:border-primary hover:text-primary transition-all duration-300 text-center"
+            >
+              {tHero('cta2')}
+            </a>
+          </motion.div>
 
           {/* What You Get */}
           <div className="pt-8">

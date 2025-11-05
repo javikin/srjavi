@@ -3,6 +3,7 @@ import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
 import SmoothScroll from '@/components/SmoothScroll';
 import { I18nProvider } from '@/lib/i18n-context';
+import PasswordGate from '@/components/PasswordGate';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,7 +38,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
         <I18nProvider>
-          <SmoothScroll>{children}</SmoothScroll>
+          <PasswordGate>
+            <SmoothScroll>{children}</SmoothScroll>
+          </PasswordGate>
         </I18nProvider>
       </body>
     </html>
