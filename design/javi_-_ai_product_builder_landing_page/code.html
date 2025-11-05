@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Javi - AI Product Builder</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;300;400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+    :root {
+      --zen-light-gray: #f8f8fa;--zen-medium-gray: #e0e6ee;--zen-dark-gray: #4a5a6b;--zen-accent-blue: #a3c1da;--zen-lavender: #d6cced;--zen-subtle-text: #7b8e9f;}
+  </style>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "background": "var(--zen-light-gray)",
+            "text-primary": "var(--zen-dark-gray)",
+            "text-secondary": "var(--zen-subtle-text)",
+            "accent-main": "var(--zen-accent-blue)",
+            "accent-light": "var(--zen-lavender)",
+            "card-bg": "var(--zen-medium-gray)",
+          },
+          fontFamily: {
+            "sans": ["IBM Plex Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.5rem",
+            "lg": "1rem",
+            "xl": "1.5rem",
+            "full": "9999px"
+          },
+          spacing: {
+            "128": "32rem",
+            "160": "40rem",
+            "192": "48rem",
+            "256": "64rem",
+          }
+        },
+      },
+    }
+  </script>
+<style>body {
+        font-weight: 300;}
+    h1, h2, h3 {
+        font-weight: 200;}
+    .zen-card {
+        background: var(--zen-light-gray);border: 1px solid var(--zen-medium-gray);
+        box-shadow: 0 2px 10px rgba(0,0,0,0.03);}.conceptual-image {
+        background-color: var(--zen-accent-blue);background-image: none !important;display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;font-size: 2rem;
+        text-align: center;
+    }.conceptual-hero-image {
+      background-image: linear-gradient(135deg, var(--zen-accent-blue) 0%, var(--zen-lavender) 100%) !important;
+      border-radius: var(--borderRadius-xl);
+    }
+    .conceptual-reality-image {
+      background-image: linear-gradient(0deg, rgba(74, 90, 107, 0.5) 0%, rgba(74, 90, 107, 0) 50%), linear-gradient(45deg, var(--zen-accent-blue), var(--zen-lavender)) !important;
+      border-radius: var(--borderRadius-lg);
+    }
+    .conceptual-work-image {
+        background-image: linear-gradient(45deg, var(--zen-medium-gray) 0%, var(--zen-lavender) 100%) !important;
+        opacity: 0.8;
+    }
+  </style>
+</head>
+<body class="bg-background font-sans text-text-primary">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<div class="flex flex-1 justify-center py-5 sm:px-4 md:px-10 lg:px-20 xl:px-40">
+<div class="layout-content-container flex flex-col max-w-[960px] flex-1">
+<header class="sticky top-0 z-50 flex items-center justify-between whitespace-nowrap px-6 sm:px-10 py-5 bg-background/80 backdrop-blur-sm">
+<div class="flex items-center gap-4">
+<div class="size-6 text-accent-main">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_6_330)">
+<path clip-rule="evenodd" d="M24 0.757355L47.2426 24L24 47.2426L0.757355 24L24 0.757355ZM21 35.7574V12.2426L9.24264 24L21 35.7574Z" fill="currentColor" fill-rule="evenodd"></path>
+</g>
+<defs>
+<clipPath id="clip0_6_330">
+<rect fill="white" height="48" width="48"></rect>
+</clipPath>
+</defs>
+</svg>
+</div>
+<h2 class="text-xl font-thin leading-tight tracking-[-0.015em]">Javi</h2>
+</div>
+<div class="hidden md:flex flex-1 justify-end gap-10">
+<div class="flex items-center gap-10">
+<a class="text-base font-light leading-normal hover:text-accent-main transition-colors" href="#">Work</a>
+<a class="text-base font-light leading-normal hover:text-accent-main transition-colors" href="#">About</a>
+<a class="text-base font-light leading-normal hover:text-accent-main transition-colors" href="#">Contact</a>
+</div>
+<button class="flex min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 px-5 bg-accent-main text-background text-base font-light leading-normal tracking-[0.015em] hover:opacity-80 transition-opacity">
+<span class="truncate">Let's build together</span>
+</button>
+</div>
+<div class="md:hidden">
+<button class="material-symbols-outlined text-text-primary">menu</button>
+</div>
+</header>
+<main class="flex flex-col gap-24 md:gap-32 pt-16">
+<section class="@container">
+<div class="flex flex-col gap-12 px-4 py-10 @[864px]:flex-row @[864px]:items-center">
+<div class="flex flex-col gap-8 text-left @[864px]:w-1/2">
+<h1 class="text-5xl font-thin leading-snug tracking-[-0.033em] @[480px]:text-6xl">
+                    Building AI-powered products that scale
+                  </h1>
+<h2 class="text-lg font-light leading-relaxed text-text-secondary @[480px]:text-xl">
+                    I help founders rapidly build and validate MVPs using the power of AI.
+                  </h2>
+<div class="flex flex-col sm:flex-row gap-5 pt-6">
+<button class="flex w-full sm:w-auto min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 bg-accent-main text-background text-base font-light leading-normal tracking-[0.015em] hover:opacity-80 transition-opacity">
+<span class="truncate">Let's build together</span>
+</button>
+<button class="flex w-full sm:w-auto min-w-[120px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-12 px-6 border border-accent-main text-accent-main bg-transparent text-base font-light leading-normal tracking-[0.015em] hover:bg-accent-main hover:text-background transition-colors">
+<span class="truncate">See my work</span>
+</button>
+</div>
+</div>
+<div class="w-full @[864px]:w-1/2 conceptual-image conceptual-hero-image aspect-square rounded-xl" data-alt="Abstract 3D geometric shape with cyan and purple gradients" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCFbCHpJWEuEeoGzwfC0d9kVWXJTCkhzxqvZitYwQ9USN1IlnA-jbKYF5dS74yo2EXfebt7txEQawzjSU4DZ9gwf4jAJvjJHhh4gai9XASb0qRkjyIgDOtsBLxNTeSrJpZ0qqyDLXwnBZqJdlb9-_Ibl4Pz-37x0Mw27lovPH9xbukjUj262uYcgcNW8AXigfrPZu5qhvY0eMHPaYlPqE0h6Ayuxu4jhVRTEmQV42EIt2Xs1OP1dcPOPGzNYraXiFLGW6EUNklKk2I");'>
+<span class="text-4xl text-background font-light">Serene Flow</span>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-3xl font-thin leading-tight tracking-[-0.015em] px-4 pb-8 pt-5 sm:text-4xl text-center">What I Do</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-8 p-4">
+<div class="flex flex-col gap-5 p-8 rounded-xl zen-card transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-accent-main text-4xl">model_training</span>
+<h3 class="text-xl font-light leading-normal">AI-Powered Apps</h3>
+<p class="text-base font-light leading-relaxed text-text-secondary">Projects include Fit, Punto Blanco, and Retro35, all built with an AI-first approach.</p>
+</div>
+<div class="flex flex-col gap-5 p-8 rounded-xl zen-card transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-accent-main text-4xl">layers</span>
+<h3 class="text-xl font-light leading-normal">Scalable Architecture</h3>
+<p class="text-base font-light leading-relaxed text-text-secondary">Utilizing Claude agents, Supabase, and FlutterFlow for robust and scalable solutions.</p>
+</div>
+<div class="flex flex-col gap-5 p-8 rounded-xl zen-card transition-transform hover:-translate-y-2">
+<span class="material-symbols-outlined text-accent-main text-4xl">rocket_launch</span>
+<h3 class="text-xl font-light leading-normal">MVP in Weeks</h3>
+<p class="text-base font-light leading-relaxed text-text-secondary">Proven track record of building and validating ideas quickly, like 4 apps in 1 month.</p>
+</div>
+</div>
+</section>
+<section class="@container">
+<div class="px-4 py-3">
+<div class="flex flex-col justify-end overflow-hidden rounded-xl min-h-[450px] md:min-h-[550px] conceptual-image conceptual-reality-image" data-alt="A serene landscape from Carrillo Puerto, Mexico, with a warm, golden hour light." style='background-image: linear-gradient(0deg, rgba(16, 30, 34, 0.7) 0%, rgba(16, 30, 34, 0) 50%), url("https://lh3.googleusercontent.com/aida-public/AB6AXuBddXw532eunekblsE0kIyNS4rXJNRFUNxc2EMFacvkVC49wQLR611kTlb1kcaJtZ0ib4qe6xQfz5X_f5iJZA9U5f0EornVHyBcQndQxYjPZQe8bmwv7SeHliPaaJ3W7r52zjujwYlbpGYtBpnWRcUR7yYtY0K11FuS4dhtsh_i46m5UvuAAmVGCfaF6-Y_i4E0JF-QGpls4-zqbPzdOXMhi3iaW44BLun_dxaRL1tri-4AQaN6VAx8ZWOrlFKJxqfujAj1MaZDOlY");'>
+<div class="flex flex-col gap-5 p-8 md:p-12 md:w-2/3 text-background">
+<h2 class="text-4xl font-thin leading-tight md:text-5xl">The Reality</h2>
+<p class="text-lg font-light leading-relaxed text-background/90">I live in a quiet pueblo in Mexico, but build products for a global audience. This balance keeps me grounded and focused. When I'm not coding, you can find me behind a camera shooting artistic portraits or in the gym powerbuilding.</p>
+</div>
+</div>
+</div>
+</section>
+<section>
+<h2 class="text-3xl font-thin leading-tight tracking-[-0.015em] px-4 pb-8 pt-5 sm:text-4xl text-center">Featured Work</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-8 p-4">
+<div class="flex flex-col gap-4 pb-3 group zen-card p-6 rounded-xl">
+<div class="w-full aspect-video rounded-lg overflow-hidden conceptual-image conceptual-work-image">
+<div class="w-full h-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="Screenshot of the 'Fit' AI-powered fitness application" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBAoH5B12krrYyDraUpW5rejpKWaINSP4Evuqykwet-yycsF-gh8DA0Z1F1qJzJbmhIKraRIoe2KRUQqTJhu4TC8Pimelkd-mfLgL3DhnQGW_HQVOAnjRCaBiPdCUZlTaOtlNqjWBY2evwYu4zUUVAL-9M426VibB6OXqUOiIOFiEAHARQHcUIm124wvg-gL4icOaV_cWdVVrq0AWoTN5e8BGdg2Qyyd_wyk0J9AYzYRzMVZvklhrpWr6vhddn4Sju2p4Wp7udncZk");'>
+<span class="text-background/50 text-2xl font-light">Project 1</span>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-light">Fit AI</h3>
+<p class="text-base font-light text-text-secondary">Personalized workout plans generated by AI, built and shipped in 2 weeks.</p>
+</div>
+</div>
+<div class="flex flex-col gap-4 pb-3 group zen-card p-6 rounded-xl">
+<div class="w-full aspect-video rounded-lg overflow-hidden conceptual-image conceptual-work-image">
+<div class="w-full h-full bg-center bg-no-repeat bg-cover group-hover:scale-105 transition-transform duration-300" data-alt="Retro style camera for the Retro35 app." style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuD3QPeDjMU_9WV6kw9jRFxAJBsD6UPPOUwcyvRh2tDtXDfKY7JeDMy3KW_L0dSUfaXHCtZqq_WR-vRrnK8OkLeksfVWgaJ8pJNIJ_leCdzUl-IzuR1BCnbBEXBRWkxE9RQC_WIU9-P1mmHpIRmK9NosH1P61b26AMnaNP1VRUiy-kuR8jcVfsg3CivEoeRGLHdN-MSBOuYyguR0mbcAxaTGSmKUyj_TMRllsC6swyRGfWIuerkxc46NQLKjlRBymq3QotIz2XBc4n4");'>
+<span class="text-background/50 text-2xl font-light">Project 2</span>
+</div>
+</div>
+<div>
+<h3 class="text-xl font-light">Retro35</h3>
+<p class="text-base font-light text-text-secondary">AI-powered photo filters that emulate classic film stocks. Part of the "4 apps in 1 month" challenge.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="px-4 py-12 md:py-20 text-center">
+<div class="max-w-4xl mx-auto flex flex-col gap-8">
+<h2 class="text-3xl font-thin tracking-tight sm:text-4xl">Why This Matters</h2>
+<p class="text-xl text-text-secondary font-light leading-relaxed">
+                  By 2026, product thinking will be more valuable than coding speed. My edge comes from YC founder experience, deep technical skill, and AI leverage.
+                </p>
+<blockquote class="text-2xl md:text-3xl font-thin leading-snug text-accent-main border-l-4 border-accent-main pl-8 text-left italic">
+                  "I help founders build better products, faster, without sacrificing quality."
+                </blockquote>
+</div>
+</section>
+<footer class="text-center py-12 md:py-20 bg-card-bg rounded-t-xl mt-16">
+<div class="flex flex-col items-center gap-8">
+<h3 class="text-3xl font-thin">Ready to validate your idea?</h3>
+<p class="text-text-secondary text-lg font-light">Let's connect and see how we can build something great together.</p>
+<div class="flex items-center gap-8 pt-6">
+<a class="text-text-secondary hover:text-accent-main transition-colors" data-alt="Email icon link" href="#">
+<span class="material-symbols-outlined text-4xl">mail</span>
+</a>
+<a class="text-text-secondary hover:text-accent-main transition-colors" data-alt="Telegram icon link" href="#">
+<svg class="h-9 w-9" fill="currentColor" viewBox="0 0 24 24">
+<path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.17.91-.494 1.208-.822 1.23-.696.047-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.04-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.034-.276.321-.557.868-.817 3.24-1.52 5.426-2.67 6.848-3.33.173-.08.312-.127.407-.127z"></path>
+</svg>
+</a>
+<a class="text-text-secondary hover:text-accent-main transition-colors" data-alt="LinkedIn icon link" href="#">
+<svg class="h-9 w-9" fill="currentColor" viewBox="0 0 24 24">
+<path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"></path>
+</svg>
+</a>
+</div>
+</div>
+</footer>
+</main>
+</div>
+</div>
+</div>
+</div>
+</body></html>
