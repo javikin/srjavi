@@ -156,15 +156,15 @@ export default function Philosophy() {
             </p>
           </div>
 
-          {/* Stack list */}
+          {/* What You Get */}
           <div className="pt-8">
-            <h3 className="text-2xl font-bold text-text-primary mb-6">My Stack</h3>
+            <h3 className="text-2xl font-bold text-text-primary mb-6">What You Get</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {[
-                { name: 'Claude AI', purpose: 'Architecture & planning' },
-                { name: 'GPT-4', purpose: 'Rapid prototyping' },
-                { name: 'Supabase', purpose: 'Backend that scales' },
-                { name: 'Battle-tested patterns', purpose: 'Zero guesswork' },
+                { name: 'Web & Mobile Apps', purpose: 'iOS, Android, and responsive web' },
+                { name: 'CI/CD Configured', purpose: 'Automated deployments from day one' },
+                { name: 'Dev Environment Ready', purpose: 'Continue development on your own' },
+                { name: 'Full Documentation', purpose: 'Your language, your stack, your way' },
               ].map((item, index) => (
                 <motion.div
                   key={index}
