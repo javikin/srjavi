@@ -4,11 +4,13 @@ import { useEffect, useRef } from 'react';
 import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslations } from 'next-intl';
 import MagneticButton from './MagneticButton';
 
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Footer() {
+  const t = useTranslations('footer');
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -102,7 +104,7 @@ export default function Footer() {
             ref={titleRef}
             className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8"
           >
-            <span className="gradient-text">Ready to validate your idea?</span>
+            <span className="gradient-text">{t('title')}</span>
           </motion.h2>
 
           <motion.p
@@ -112,7 +114,7 @@ export default function Footer() {
             viewport={{ once: true }}
             className="text-xl md:text-2xl text-text-secondary mb-12 max-w-3xl mx-auto"
           >
-            Let&apos;s connect and see how we can build something great together.
+            {t('subtitle')}
           </motion.p>
 
           <motion.div
@@ -126,7 +128,7 @@ export default function Footer() {
                 href="mailto:javierolan@gmail.com"
                 className="inline-block px-12 py-5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-lg font-medium hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 glow-purple"
               >
-                Get in Touch
+                {t('cta')}
               </a>
             </MagneticButton>
           </motion.div>
@@ -166,18 +168,18 @@ export default function Footer() {
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-text-secondary">
             <div className="flex items-center gap-2">
-              <p className="text-sm">© 2025 Javi. Built from FCP, QRoo.</p>
+              <p className="text-sm">{t('copyright')}</p>
             </div>
 
             <div className="flex gap-6 text-sm">
               <a href="#" className="hover:text-primary transition-colors">
-                Privacy
+                {t('privacy')}
               </a>
               <a href="#" className="hover:text-primary transition-colors">
-                Terms
+                {t('terms')}
               </a>
               <a href="#" className="hover:text-primary transition-colors">
-                Cookies
+                {t('cookies')}
               </a>
             </div>
           </div>

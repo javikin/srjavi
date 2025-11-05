@@ -280,6 +280,47 @@ export default function PuntoGoPage() {
         </div>
       </section>
 
+      {/* Screenshots Showcase */}
+      <section className="relative py-32 overflow-hidden">
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          <motion.h2
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-5xl md:text-6xl font-bold text-text-primary mb-20 text-center"
+          >
+            In Action
+          </motion.h2>
+
+          <div className="grid md:grid-cols-2 gap-8 mb-32">
+            {[
+              { src: '/images/projects/puntogo-menu.png', alt: 'Menu Integration', label: 'Real-time Menu' },
+              { src: '/images/projects/puntogo-cart.png', alt: 'Cart with Multipliers', label: 'Smart Cart' },
+            ].map((screenshot, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.2 }}
+                className="relative group"
+              >
+                <div className="relative rounded-3xl overflow-hidden border border-text-primary/10 hover:border-orange-500/50 transition-all duration-500">
+                  <img
+                    src={screenshot.src}
+                    alt={screenshot.alt}
+                    className="w-full h-auto"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-background/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-6">
+                    <span className="text-text-primary font-medium">{screenshot.label}</span>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* How it Works */}
       <section className="relative py-32 overflow-hidden bg-surface/50">
         <div className="relative max-w-5xl mx-auto px-6 lg:px-12">

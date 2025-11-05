@@ -4,6 +4,7 @@ import { useEffect, useRef } from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
+import { useTranslations } from 'next-intl';
 import Image from 'next/image';
 
 gsap.registerPlugin(ScrollTrigger);
@@ -116,7 +117,7 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
           transition={{ duration: 0.6, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          <span className="text-sm font-medium gradient-text">Project {index + 1}</span>
+          <span className="text-sm font-medium gradient-text">{t('projectLabel')} {index + 1}</span>
         </motion.div>
 
         <motion.h3
@@ -161,6 +162,7 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
 }
 
 export default function FeaturedWork() {
+  const t = useTranslations('work');
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
@@ -219,7 +221,7 @@ export default function FeaturedWork() {
           ref={titleRef}
           className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-20 text-center"
         >
-          Featured Work
+          {t('title')}
         </motion.h2>
 
         <div className="space-y-32">
@@ -240,7 +242,7 @@ export default function FeaturedWork() {
             href="#contact"
             className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium hover:shadow-2xl hover:shadow-primary/40 transition-all duration-300"
           >
-            Let&apos;s Build Your Next Project
+            {t('cta')}
           </a>
         </motion.div>
       </div>
