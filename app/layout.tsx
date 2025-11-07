@@ -30,6 +30,20 @@ export const metadata: Metadata = {
     title: 'Javi - AI Product Builder | Ship MVPs in 2 Weeks',
     description: 'YC-experienced builder. AI-first development that scales.',
     type: 'website',
+    images: [
+      {
+        url: '/images/javi-profile.jpg',
+        width: 1200,
+        height: 630,
+        alt: 'Javi - AI Product Builder',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Javi - AI Product Builder | Ship MVPs in 2 Weeks',
+    description: 'YC-experienced builder. AI-first development that scales.',
+    images: ['/images/javi-profile.jpg'],
   },
 };
 
