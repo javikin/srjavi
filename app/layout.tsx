@@ -6,6 +6,8 @@ import DarkModeScript from '@/components/DarkModeScript';
 import PageTransition from '@/components/PageTransition';
 import { I18nProvider } from '@/lib/i18n-context';
 
+export const dynamic = 'force-dynamic';
+
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-geist-sans',
