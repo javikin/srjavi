@@ -7,6 +7,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import dynamic from 'next/dynamic';
 import MagneticButton from './MagneticButton';
 import AnimatedShape from './AnimatedShape';
+import { useTranslations } from '@/lib/i18n-context';
 
 // Dynamically import Scene3DSimple to avoid SSR issues
 const Scene3DSimple = dynamic(() => import('./Scene3DSimple'), {
@@ -17,6 +18,7 @@ const Scene3DSimple = dynamic(() => import('./Scene3DSimple'), {
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Hero() {
+  const t = useTranslations('hero');
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
   const subtitleRef = useRef<HTMLParagraphElement>(null);
@@ -28,6 +30,10 @@ export default function Hero() {
 
   const opacity = useTransform(scrollYProgress, [0, 0.5], [1, 0]);
   const scale = useTransform(scrollYProgress, [0, 0.5], [1, 0.8]);
+
+  // Parallax for orbs (subtle movement)
+  const orb1Y = useTransform(scrollYProgress, [0, 1], [0, 150]);
+  const orb2Y = useTransform(scrollYProgress, [0, 1], [0, -100]);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -83,64 +89,58 @@ export default function Hero() {
     <motion.section
       ref={sectionRef}
       style={{ opacity, scale }}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden noise-overlay"
+      className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-br from-background via-surface to-background" />
+      {/* Subtle pastel orbs with parallax (Jason Briscoe style) */}
+      <motion.div
+        style={{ y: orb1Y }}
+        className="absolute top-1/4 -left-40 w-80 h-80 bg-mint/10 rounded-full blur-3xl animate-float"
+      />
+      <motion.div
+        style={{ y: orb2Y }}
+        className="absolute bottom-1/4 -right-40 w-96 h-96 bg-coral/10 rounded-full blur-3xl animate-float"
+      />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-lavender/5 rounded-full blur-3xl" />
 
-      {/* Animated orbs */}
-      <div className="absolute top-1/4 -left-40 w-80 h-80 bg-secondary/20 rounded-full blur-3xl animate-float" />
-      <div className="absolute bottom-1/4 -right-40 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-float" style={{ animationDelay: '-3s' }} />
-
-      <div className="relative max-w-7xl mx-auto px-6 lg:px-12 py-32 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-4xl mx-auto px-6 lg:px-12 py-32 text-center">
         {/* Content */}
         <div className="space-y-8 z-10">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2 }}
-            className="inline-block px-4 py-2 rounded-full bg-primary/10 border border-primary/30"
+            className="inline-block"
           >
-            <span className="text-sm font-medium gradient-text">AI Product Builder</span>
+            <span className="text-sm font-medium text-text-muted">{t('badge')}</span>
           </motion.div>
 
           <h1
             ref={titleRef}
             className="text-5xl md:text-7xl lg:text-8xl font-bold leading-tight text-text-primary perspective-1000"
           >
-            Ship MVPs in 2 Weeks
+            {t('title')}
           </h1>
 
           <p
             ref={subtitleRef}
-            className="text-xl md:text-2xl text-text-secondary max-w-2xl leading-relaxed"
+            className="text-xl md:text-2xl text-text-secondary max-w-2xl mx-auto leading-relaxed"
           >
-            YC-experienced builder. AI-first development. Production-ready.
+            {t('subtitle')}
           </p>
 
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 1.2 }}
-            className="flex flex-col sm:flex-row gap-4 pt-4"
+            className="flex flex-col sm:flex-row gap-6 pt-8 justify-center items-center"
           >
-            <MagneticButton>
-              <a
-                href="#contact"
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 text-center glow-purple"
-              >
-                Validate Your Idea
-              </a>
-            </MagneticButton>
-
-            <MagneticButton>
-              <a
-                href="#work"
-                className="px-8 py-4 rounded-full border-2 border-text-primary/20 text-text-primary font-medium hover:border-primary hover:text-primary transition-all duration-300 text-center"
-              >
-                See Work
-              </a>
-            </MagneticButton>
+            <a
+              href="/ship/form"
+              className="text-2xl md:text-3xl font-bold text-text-primary hover:text-emerald-400 transition-colors inline-flex items-center gap-2 group"
+            >
+              {t('cta')}
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
+            </a>
           </motion.div>
 
           {/* Stats */}
@@ -148,30 +148,20 @@ export default function Hero() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 1.4 }}
-            className="flex gap-8 pt-8 flex-wrap"
+            className="flex gap-12 pt-12 flex-wrap justify-center"
           >
             {[
-              { value: '2 weeks', label: 'Avg. Delivery' },
-              { value: '10K+', label: 'Users Reached' },
-              { value: 'YC', label: 'Experience' },
+              { value: t('stat1Value'), label: t('stat1Label') },
+              { value: t('stat2Value'), label: t('stat2Label') },
+              { value: t('stat3Value'), label: t('stat3Label') },
             ].map((stat, index) => (
               <div key={index} className="flex flex-col">
-                <span className="text-3xl font-bold gradient-text">{stat.value}</span>
+                <span className="text-3xl font-bold text-text-primary">{stat.value}</span>
                 <span className="text-sm text-text-secondary">{stat.label}</span>
               </div>
             ))}
           </motion.div>
         </div>
-
-        {/* 3D Scene */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.8 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 1, delay: 0.5 }}
-          className="relative w-full h-[500px] lg:h-[700px]"
-        >
-          <AnimatedShape />
-        </motion.div>
       </div>
 
       {/* Scroll indicator */}
@@ -189,7 +179,7 @@ export default function Hero() {
           <motion.div
             animate={{ y: [0, 12, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            className="w-1.5 h-1.5 bg-secondary rounded-full"
+            className="w-1.5 h-1.5 bg-text-primary/40 rounded-full"
           />
         </motion.div>
       </motion.div>

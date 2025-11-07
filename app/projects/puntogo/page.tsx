@@ -123,17 +123,21 @@ export default function PuntoGoPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.5 }}
-              className="flex gap-4"
+              className="flex items-center gap-8"
             >
+              {/* Primary CTA - View Project */}
               <a
                 href="#features"
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white font-medium hover:shadow-2xl hover:shadow-orange-500/40 transition-all"
+                className="text-2xl md:text-3xl font-bold text-text-primary hover:text-orange-400 transition-colors inline-flex items-center gap-2 group"
               >
                 Explore Features
+                <span className="group-hover:translate-x-1 transition-transform">→</span>
               </a>
+
+              {/* Secondary link - Tech Stack */}
               <a
                 href="#tech"
-                className="px-8 py-4 rounded-full border-2 border-text-primary/20 text-text-primary font-medium hover:border-orange-500 hover:text-orange-500 transition-all"
+                className="text-text-secondary hover:text-text-primary transition-colors font-medium"
               >
                 Tech Stack
               </a>
@@ -523,9 +527,10 @@ export default function PuntoGoPage() {
           >
             <Link
               href="/#contact"
-              className="inline-block px-12 py-5 rounded-full bg-gradient-to-r from-orange-500 to-orange-600 text-white text-lg font-medium hover:shadow-2xl hover:shadow-orange-500/50 transition-all"
+              className="text-2xl md:text-3xl font-bold text-text-primary hover:text-orange-400 transition-colors inline-flex items-center gap-2 group"
             >
               Let&apos;s Build Yours
+              <span className="group-hover:translate-x-1 transition-transform">→</span>
             </Link>
           </motion.div>
         </div>

@@ -6,6 +6,7 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTranslations } from '@/lib/i18n-context';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -18,8 +19,13 @@ interface ProjectProps {
   index: number;
 }
 
+interface FeaturedWorkProps {
+  showCTA?: boolean;
+}
+
 function ProjectCard({ title, description, image, tags, link, index }: ProjectProps) {
   const t = useTranslations('work');
+  const router = useRouter();
   const cardRef = useRef<HTMLDivElement>(null);
   const imageRef = useRef<HTMLDivElement>(null);
 
@@ -30,6 +36,9 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
 
   const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
   const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
+
+  // Zoom effect for image (Jason Briscoe style)
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1, 1.2]);
 
   useEffect(() => {
     if (!cardRef.current || !imageRef.current) return;
@@ -78,7 +87,7 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
     <motion.div
       ref={cardRef}
       style={{ opacity }}
-      className="group relative grid md:grid-cols-2 gap-8 items-center"
+      className="project-card group relative grid md:grid-cols-2 gap-8 items-center"
     >
       {/* Image */}
       <motion.div
@@ -87,31 +96,61 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
           index % 2 === 0 ? 'md:order-1' : 'md:order-2'
         }`}
       >
-        <div
+        <motion.div
           ref={imageRef}
-          className="absolute inset-0 bg-gradient-to-br from-secondary/20 to-primary/20"
+          data-project-image
+          style={{ scale }}
+          className="absolute inset-0 w-full h-full"
         >
-          {/* Placeholder for project image */}
-          <div className="w-full h-full bg-gradient-to-br from-surface via-primary/10 to-surface flex items-center justify-center">
-            <span className="text-6xl text-secondary opacity-30">{title[0]}</span>
+          <div
+            className="absolute inset-0 w-full h-full"
+            style={{
+              filter: 'grayscale(100%)',
+              transition: 'filter 0.5s ease',
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLDivElement).style.filter = 'grayscale(50%)';
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLDivElement).style.filter = 'grayscale(100%)';
+            }}
+          >
+            <Image
+              src={image}
+              alt={title}
+              fill
+              className="object-cover"
+            />
           </div>
-        </div>
+        </motion.div>
 
         {/* Overlay on hover */}
         <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-          <motion.a
-            href={link}
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="px-6 py-3 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium"
+          <motion.button
+            onClick={(e) => {
+              e.preventDefault();
+
+              if (link.startsWith('/')) {
+                // Store transition type in sessionStorage
+                sessionStorage.setItem('pageTransition', 'overlay');
+
+                // Navigate after small delay
+                setTimeout(() => {
+                  router.push(link);
+                }, 50);
+              } else {
+                window.open(link, '_blank', 'noopener,noreferrer');
+              }
+            }}
+            className="text-text-primary hover:text-text-secondary font-medium cursor-pointer transition-colors"
           >
             View Project →
-          </motion.a>
+          </motion.button>
         </div>
       </motion.div>
 
       {/* Content */}
-      <div className={`space-y-6 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>        
+      <div className={`space-y-6 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
         <motion.h3
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -148,12 +187,68 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
             </span>
           ))}
         </motion.div>
+
+        {/* View Project Link - Primary CTA */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+          viewport={{ once: true }}
+          className="pt-4"
+        >
+          <button
+            onClick={(e) => {
+              e.preventDefault();
+
+              if (link.startsWith('/')) {
+                // Store transition type in sessionStorage
+                sessionStorage.setItem('pageTransition', 'overlay');
+
+                // Navigate after small delay
+                setTimeout(() => {
+                  router.push(link);
+                }, 50);
+              } else {
+                window.open(link, '_blank', 'noopener,noreferrer');
+              }
+            }}
+            className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors text-lg font-bold group cursor-pointer"
+          >
+            <span>View Project</span>
+            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </button>
+        </motion.div>
+
+        {/* Visit App Link - Secondary - Only for paga.one */}
+        {link === '/projects/paga-one' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            viewport={{ once: true }}
+            className="pt-2"
+          >
+            <a
+              href="https://paga.one"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors text-sm font-medium group"
+            >
+              <span>Visit paga.one</span>
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </motion.div>
+        )}
       </div>
     </motion.div>
   );
 }
 
-export default function FeaturedWork() {
+export default function FeaturedWork({ showCTA = false }: FeaturedWorkProps) {
   const t = useTranslations('work');
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
@@ -182,20 +277,13 @@ export default function FeaturedWork() {
 
   const projects = [
     {
-      title: 'PuntoGo',
+      title: 'paga.one',
       description:
-        'Loyalty gamification system for Punto Blanco restaurant. Daily drops with 2X-10X multipliers, OCR ticket scanning, and real-time menu integration. Built in 30 days.',
-      image: '/images/projects/puntogo.jpg',
-      tags: ['Flutter', 'Supabase', 'Gamification', 'OCR', 'Real-time'],
-      link: '/projects/puntogo',
-    },
-    {
-      title: 'Fit AI',
-      description:
-        'Personalized workout plans generated by AI. Built with Flutter, Claude AI, and Supabase. Shipped to production in 2 weeks with real user traction.',
-      image: '/images/projects/fit.jpg',
-      tags: ['Flutter', 'Claude AI', 'Supabase', 'Fitness'],
-      link: '#',
+        'Split restaurant bills and share banking info with a simple link. No more asking for CLABEs. Built with Next.js 15, React 19, and Supabase. Live in production.',
+      image: '/images/projects/pagaone-mockup.jpg',
+      tags: ['Next.js 15', 'React 19', 'Supabase', 'Payments', 'PWA'],
+      link: '/projects/paga-one',
+      transition: 'overlay', // Color overlay transition
     },
   ];
 
@@ -203,10 +291,15 @@ export default function FeaturedWork() {
     <section
       id="work"
       ref={sectionRef}
-      className="relative py-32 overflow-hidden"
+      data-scroll-section
+      className="relative py-32 overflow-hidden bg-surface"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-surface/30 to-background" />
+      {/* Fade from previous section */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-background to-transparent pointer-events-none z-10" />
+
+      {/* Subtle pastel orbs for depth */}
+      <div className="absolute top-0 left-0 w-[600px] h-[600px] bg-gradient-to-br from-lavender/5 to-transparent rounded-full blur-3xl" />
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-gradient-to-tr from-sky/8 to-transparent rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         <motion.h2
@@ -222,21 +315,23 @@ export default function FeaturedWork() {
           ))}
         </div>
 
-        {/* CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-          className="text-center mt-20"
-        >
-          <a
-            href="#contact"
-            className="inline-block px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white font-medium hover:shadow-2xl hover:shadow-primary/40 transition-all duration-300"
+        {/* CTA - Only show if showCTA is true */}
+        {showCTA && (
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8 }}
+            viewport={{ once: true }}
+            className="text-center mt-20"
           >
-            {t('cta')}
-          </a>
-        </motion.div>
+            <a
+              href="#contact"
+              className="inline-block text-text-secondary hover:text-text-primary font-medium transition-colors"
+            >
+              {t('cta')} →
+            </a>
+          </motion.div>
+        )}
       </div>
     </section>
   );

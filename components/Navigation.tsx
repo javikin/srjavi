@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useTranslations } from '@/lib/i18n-context';
 import MagneticButton from './MagneticButton';
 import LanguageSwitcher from './LanguageSwitcher';
+import ThemeToggle from './ThemeToggle';
 
 export default function Navigation() {
   const t = useTranslations('nav');
@@ -21,7 +22,7 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { href: '#philosophy', label: t('philosophy') },
+    { href: '#about', label: t('about') },
     { href: '#work', label: t('work') },
     { href: '#contact', label: t('contact') },
   ];
@@ -51,34 +52,22 @@ export default function Navigation() {
             </motion.a>
 
             {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-8">
+            <div className="hidden md:flex items-center gap-6">
+              <ThemeToggle />
               <LanguageSwitcher />
 
               {navLinks.map((link, index) => (
                 <motion.a
                   key={link.href}
                   href={link.href}
-                  className="text-text-secondary hover:text-text-primary transition-colors text-sm font-medium relative group"
+                  className="text-text-secondary hover:text-text-primary transition-colors text-sm font-medium"
                   initial={{ opacity: 0, y: -20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: index * 0.1 }}
                 >
                   {link.label}
-                  <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-gradient-to-r from-primary to-secondary group-hover:w-full transition-all duration-300" />
                 </motion.a>
               ))}
-
-              <MagneticButton>
-                <motion.a
-                  href="#contact"
-                  className="px-6 py-2.5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-sm font-medium hover:shadow-lg hover:shadow-primary/40 transition-all duration-300"
-                  initial={{ opacity: 0, scale: 0.8 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ duration: 0.5, delay: 0.3 }}
-                >
-                  {t('contact')}
-                </motion.a>
-              </MagneticButton>
             </div>
 
             {/* Mobile Menu Button */}
@@ -117,6 +106,7 @@ export default function Navigation() {
             className="fixed inset-0 z-40 md:hidden bg-background"
           >
             <div className="flex flex-col items-center justify-center h-full gap-8">
+              <ThemeToggle />
               <LanguageSwitcher />
 
               {navLinks.map((link, index) => (
@@ -132,16 +122,6 @@ export default function Navigation() {
                   {link.label}
                 </motion.a>
               ))}
-              <motion.a
-                href="#contact"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="px-8 py-4 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-lg font-medium"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.3, delay: 0.3 }}
-              >
-                {t('contact')}
-              </motion.a>
             </div>
           </motion.div>
         )}

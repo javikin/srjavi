@@ -1,7 +1,7 @@
 import Navigation from '@/components/Navigation';
-import Hero from '@/components/Hero';
-import Philosophy from '@/components/Philosophy';
+import About from '@/components/About';
 import FeaturedWork from '@/components/FeaturedWork';
+import LandingCTA from '@/components/LandingCTA';
 import Footer from '@/components/Footer';
 import PerformanceMonitor from '@/components/PerformanceMonitor';
 
@@ -9,9 +9,10 @@ export default function Home() {
   return (
     <main className="relative">
       <Navigation />
-      <Philosophy />
+      <About />
       <FeaturedWork />
-      <Footer />
+      <LandingCTA />
+      <Footer showEasterEgg={true} />
       <PerformanceMonitor />
     </main>
   );

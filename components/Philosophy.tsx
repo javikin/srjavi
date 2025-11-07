@@ -68,6 +68,9 @@ export default function Philosophy() {
       ref={sectionRef}
       className="relative min-h-screen flex items-center overflow-hidden bg-gradient-to-b from-background via-surface to-background"
     >
+      {/* Fade from FeaturedWork section (surface background) */}
+      <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-surface to-transparent pointer-events-none z-10" />
+
       {/* Background gradient orbs */}
       <div className="absolute top-1/4 -right-40 w-96 h-96 bg-secondary/10 rounded-full blur-3xl animate-pulse-slow" />
       <div className="absolute bottom-1/4 -left-40 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '-2s' }} />

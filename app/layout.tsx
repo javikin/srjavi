@@ -1,9 +1,11 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import SmoothScroll from '@/components/SmoothScroll';
+import LocomotiveScrollProvider from '@/components/LocomotiveScrollProvider';
+import PageLoader from '@/components/PageLoader';
+import DarkModeScript from '@/components/DarkModeScript';
+import PageTransition from '@/components/PageTransition';
 import { I18nProvider } from '@/lib/i18n-context';
-import PasswordGate from '@/components/PasswordGate';
 
 const inter = Inter({
   subsets: ['latin'],
@@ -37,10 +39,14 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
+        <DarkModeScript />
+        <PageLoader />
         <I18nProvider>
-          <PasswordGate>
-            <SmoothScroll>{children}</SmoothScroll>
-          </PasswordGate>
+          <LocomotiveScrollProvider>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </LocomotiveScrollProvider>
         </I18nProvider>
       </body>
     </html>

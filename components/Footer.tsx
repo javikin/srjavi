@@ -6,13 +6,21 @@ import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTranslations } from '@/lib/i18n-context';
 import MagneticButton from './MagneticButton';
+import EasterEgg from './EasterEgg';
+import type { EasterEggRef } from './EasterEgg';
 
 gsap.registerPlugin(ScrollTrigger);
 
-export default function Footer() {
+interface FooterProps {
+  showCTA?: boolean;
+  showEasterEgg?: boolean;
+}
+
+export default function Footer({ showCTA = false, showEasterEgg = false }: FooterProps) {
   const t = useTranslations('footer');
   const sectionRef = useRef<HTMLElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
+  const easterEggRef = useRef<EasterEggRef>(null);
 
   useEffect(() => {
     if (!titleRef.current) return;
@@ -88,51 +96,50 @@ export default function Footer() {
     <footer
       id="contact"
       ref={sectionRef}
-      className="relative py-32 overflow-hidden"
+      data-scroll-section
+      className="relative py-32 overflow-hidden bg-surface"
     >
-      {/* Background gradient */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background to-surface" />
-
-      {/* Animated gradient orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '-2s' }} />
+      {/* Subtle pastel orbs */}
+      <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky/8 rounded-full blur-3xl animate-pulse-slow" />
+      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-mint/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '-2s' }} />
+      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-coral/5 rounded-full blur-3xl" />
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
-        {/* Main CTA */}
-        <div className="text-center mb-20">
-          <motion.h2
-            ref={titleRef}
-            className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8"
-          >
-            <span className="gradient-text">{t('title')}</span>
-          </motion.h2>
+        {/* Main CTA - Only show if showCTA is true */}
+        {showCTA && (
+          <div className="text-center mb-20">
+            <motion.h2
+              ref={titleRef}
+              className="text-5xl md:text-6xl lg:text-7xl font-bold mb-8 text-text-primary"
+            >
+              {t('title')}
+            </motion.h2>
 
-          <motion.p
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.3 }}
-            viewport={{ once: true }}
-            className="text-xl md:text-2xl text-text-secondary mb-12 max-w-3xl mx-auto"
-          >
-            {t('subtitle')}
-          </motion.p>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-xl md:text-2xl text-text-secondary mb-12 max-w-3xl mx-auto"
+            >
+              {t('subtitle')}
+            </motion.p>
 
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            <MagneticButton>
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.5 }}
+              viewport={{ once: true }}
+            >
               <a
                 href="mailto:javierolan@gmail.com"
-                className="inline-block px-12 py-5 rounded-full bg-gradient-to-r from-primary to-secondary text-white text-lg font-medium hover:shadow-2xl hover:shadow-primary/50 transition-all duration-300 glow-purple"
+                className="inline-block text-text-secondary hover:text-text-primary text-lg font-medium transition-colors"
               >
-                {t('cta')}
+                {t('cta')} →
               </a>
-            </MagneticButton>
-          </motion.div>
-        </div>
+            </motion.div>
+          </div>
+        )}
 
         {/* Social Links */}
         <motion.div
@@ -167,8 +174,30 @@ export default function Footer() {
           className="pt-12 border-t border-text-primary/10"
         >
           <div className="flex flex-col md:flex-row justify-between items-center gap-4 text-text-secondary">
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-4">
               <p className="text-sm">{t('copyright')}</p>
+
+              {/* Easter Egg Button - Only show if showEasterEgg is true */}
+              {showEasterEgg && (
+                <motion.button
+                  onClick={() => easterEggRef.current?.open()}
+                  whileHover={{ scale: 1.2, rotate: 15 }}
+                  whileTap={{ scale: 0.9 }}
+                  animate={{
+                    scale: [1, 1.05, 1],
+                    rotate: [0, 5, -5, 0],
+                  }}
+                  transition={{
+                    duration: 3,
+                    repeat: Infinity,
+                    ease: 'easeInOut',
+                  }}
+                  className="opacity-40 hover:opacity-100 transition-opacity duration-300 cursor-pointer text-2xl drop-shadow-lg"
+                  title="¿Qué será esto?"
+                >
+                  🥚
+                </motion.button>
+              )}
             </div>
 
             <div className="flex gap-6 text-sm">
@@ -185,6 +214,9 @@ export default function Footer() {
           </div>
         </motion.div>
       </div>
+
+      {/* Easter Egg Modal - Only render if showEasterEgg is true */}
+      {showEasterEgg && <EasterEgg ref={easterEggRef} />}
 
       {/* Decorative elements */}
       <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-primary/50 to-transparent" />
