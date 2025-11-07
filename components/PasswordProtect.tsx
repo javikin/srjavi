@@ -24,9 +24,13 @@ export default function PasswordProtect({ children }: PasswordProtectProps) {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    const correctPassword = process.env.NEXT_PUBLIC_SITE_PASSWORD;
+    const correctPassword = process.env.NEXT_PUBLIC_SITE_PASSWORD?.trim();
 
-    if (password === correctPassword) {
+    console.log('Entered password:', password);
+    console.log('Correct password:', correctPassword);
+    console.log('Match:', password.trim() === correctPassword);
+
+    if (password.trim() === correctPassword) {
       setIsAuthenticated(true);
       sessionStorage.setItem('site_authenticated', 'true');
       setError(false);
