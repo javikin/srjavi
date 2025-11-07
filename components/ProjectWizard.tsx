@@ -77,6 +77,7 @@ export default function ProjectWizard({ onComplete }: ProjectWizardProps) {
       features: [],
       timeline: null,
       budget: null,
+      paymentModel: null,
     });
   };
 
