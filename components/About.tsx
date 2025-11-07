@@ -115,8 +115,6 @@ export default function About() {
               className="object-cover"
               style={{
                 objectPosition: 'center 0%',
-                maskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0,0,0,1) 70%, rgba(0,0,0,0) 100%)',
               }}
             />
           </motion.div>
