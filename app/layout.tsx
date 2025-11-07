@@ -5,6 +5,7 @@ import PageLoader from '@/components/PageLoader';
 import DarkModeScript from '@/components/DarkModeScript';
 import PageTransition from '@/components/PageTransition';
 import { I18nProvider } from '@/lib/i18n-context';
+import PasswordProtect from '@/components/PasswordProtect';
 
 export const dynamic = 'force-dynamic';
 
@@ -42,11 +43,13 @@ export default function RootLayout({
       <body>
         <DarkModeScript />
         <PageLoader />
-        <I18nProvider>
-          <PageTransition>
-            {children}
-          </PageTransition>
-        </I18nProvider>
+        <PasswordProtect>
+          <I18nProvider>
+            <PageTransition>
+              {children}
+            </PageTransition>
+          </I18nProvider>
+        </PasswordProtect>
       </body>
     </html>
   );
