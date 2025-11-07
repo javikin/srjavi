@@ -14,6 +14,14 @@ export default function PasswordProtect({ children }: PasswordProtectProps) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    // If no password is set, skip authentication
+    const sitePassword = process.env.NEXT_PUBLIC_SITE_PASSWORD;
+    if (!sitePassword || sitePassword.trim() === '') {
+      setIsAuthenticated(true);
+      setIsLoading(false);
+      return;
+    }
+
     // Check if user is already authenticated
     const auth = sessionStorage.getItem('site_authenticated');
     if (auth === 'true') {
