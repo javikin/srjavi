@@ -1,7 +1,6 @@
 import type { Metadata } from 'next';
 import { Inter, JetBrains_Mono } from 'next/font/google';
 import './globals.css';
-import LocomotiveScrollProvider from '@/components/LocomotiveScrollProvider';
 import PageLoader from '@/components/PageLoader';
 import DarkModeScript from '@/components/DarkModeScript';
 import PageTransition from '@/components/PageTransition';
@@ -42,11 +41,9 @@ export default function RootLayout({
         <DarkModeScript />
         <PageLoader />
         <I18nProvider>
-          <LocomotiveScrollProvider>
-            <PageTransition>
-              {children}
-            </PageTransition>
-          </LocomotiveScrollProvider>
+          <PageTransition>
+            {children}
+          </PageTransition>
         </I18nProvider>
       </body>
     </html>
