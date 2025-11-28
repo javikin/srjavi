@@ -23,27 +23,27 @@ const jetbrainsMono = JetBrains_Mono({
 });
 
 export const metadata: Metadata = {
-  title: 'Javi - AI Product Builder | Ship MVPs in 2 Weeks',
-  description: 'YC-experienced builder helping startups validate ideas and ship production-ready MVPs in 2 weeks. AI-first development that scales.',
-  keywords: ['AI', 'Product Builder', 'MVP', 'Startup', 'Tech Founder', 'YC'],
+  title: 'Javi - Desarrollador Full-Stack & Creador',
+  description: 'Desarrollador full-stack con más de 14 años creando productos digitales. Sueño con producir cortometrajes y disfruto estar rodeado de naturaleza.',
+  keywords: ['Desarrollador', 'Full-Stack', 'Creador', 'Costa Rica', 'Productos Digitales'],
   authors: [{ name: 'Javi', url: 'https://github.com/javikin' }],
   openGraph: {
-    title: 'Javi - AI Product Builder | Ship MVPs in 2 Weeks',
-    description: 'YC-experienced builder. AI-first development that scales.',
+    title: 'Javi - Desarrollador Full-Stack & Creador',
+    description: 'Más de 14 años creando productos digitales. Sueño con producir cortometrajes.',
     type: 'website',
     images: [
       {
         url: '/images/javi-profile.jpg',
         width: 1200,
         height: 630,
-        alt: 'Javi - AI Product Builder',
+        alt: 'Javi - Desarrollador Full-Stack',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Javi - AI Product Builder | Ship MVPs in 2 Weeks',
-    description: 'YC-experienced builder. AI-first development that scales.',
+    title: 'Javi - Desarrollador Full-Stack & Creador',
+    description: 'Más de 14 años creando productos digitales. Sueño con producir cortometrajes.',
     images: ['/images/javi-profile.jpg'],
   },
 };
