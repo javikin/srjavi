@@ -144,7 +144,7 @@ export default function BlogPost({ content, backLabel, backUrl = '/journal' }: B
               className="max-w-4xl mx-auto px-6 text-center"
             >
               <p className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-coral via-mint to-sky leading-tight">
-                "{(section as any).text}"
+                &ldquo;{(section as any).text}&rdquo;
               </p>
             </motion.blockquote>
           </section>

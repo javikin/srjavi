@@ -201,14 +201,14 @@ export default function BlogPostEditable({
               className="max-w-4xl mx-auto px-6 text-center"
             >
               <p className="text-3xl md:text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-coral via-mint to-sky leading-tight">
-                "<InlineEdit
+                &ldquo;<InlineEdit
                   value={(section as any).text}
                   onSave={async (val) => await onUpdate(section.jsonPath || `${sectionName}.text`, val)}
                   field={section.jsonPath || `${sectionName}.text`}
                   editMode={editMode}
                   multiline
                   className="text-3xl md:text-5xl font-bold"
-                />"
+                />&rdquo;
               </p>
             </motion.blockquote>
           </section>
