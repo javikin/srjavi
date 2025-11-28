@@ -209,7 +209,7 @@ export default function JournalPage() {
           <MobileRootNode node={journalTree} />
 
           {/* Children as vertical list */}
-          <div className="relative mt-8 ml-4 pl-6 border-l-2 border-text-muted/20">
+          <div className="relative mt-12 ml-4 pl-6 border-l-2 border-text-muted/20">
             {journalTree.children.map((child, index) => (
               <MobileChildNode key={child.id} node={child} index={index} />
             ))}
@@ -560,7 +560,7 @@ function MobileChildNode({ node, index }: { node: any; index: number }) {
       initial={{ opacity: 0, x: -20 }}
       animate={{ opacity: 1, x: 0 }}
       transition={{ delay: 0.3 + index * 0.1, duration: 0.4 }}
-      className="relative mb-8 last:mb-0"
+      className="relative mb-12 last:mb-0"
     >
       {/* Horizontal connector */}
       <div className="absolute -left-6 top-4 w-6 h-0.5 bg-text-muted/20" />
