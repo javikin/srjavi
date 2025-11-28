@@ -221,7 +221,7 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
           </button>
         </motion.div>
 
-        {/* Visit App Link - Secondary - Only for paga.one */}
+        {/* Visit App Link - Secondary */}
         {link === '/projects/paga-one' && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -237,6 +237,28 @@ function ProjectCard({ title, description, image, tags, link, index }: ProjectPr
               className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors text-sm font-medium group"
             >
               <span>Visit paga.one</span>
+              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+              </svg>
+            </a>
+          </motion.div>
+        )}
+
+        {link === '/projects/fit' && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            viewport={{ once: true }}
+            className="pt-2"
+          >
+            <a
+              href="https://gainz-fit.web.app"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors text-sm font-medium group"
+            >
+              <span>Try Gainz</span>
               <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
@@ -278,12 +300,19 @@ export default function FeaturedWork({ showCTA = false }: FeaturedWorkProps) {
   const projects = [
     {
       title: 'paga.one',
-      description:
-        'Split restaurant bills and share banking info with a simple link. No more asking for CLABEs. Built with Next.js 15, React 19, and Supabase. Live in production.',
-      image: '/images/projects/pagaone-mockup.jpg',
+      description: t('pagaoneDesc'),
+      image: '/images/projects/pagaone-hero.png',
       tags: ['Next.js 15', 'React 19', 'Supabase', 'Payments', 'PWA'],
       link: '/projects/paga-one',
       transition: 'overlay', // Color overlay transition
+    },
+    {
+      title: 'Gainz',
+      description: t('gainzDesc'),
+      image: '/images/projects/fit-hero.png',
+      tags: ['Flutter', 'Dart', 'Riverpod', 'Drift', 'Supabase', 'Material 3'],
+      link: '/projects/fit',
+      transition: 'overlay',
     },
   ];
 

@@ -1,0 +1,72 @@
+fragment PostParts on Post {
+  __typename
+  title
+  subtitle
+  date
+  readTime
+  tags
+  hero {
+    __typename
+    image
+    alt
+  }
+  intro {
+    __typename
+    quote
+    paragraph1
+    paragraph2
+  }
+  section1 {
+    __typename
+    title
+    paragraph1
+    paragraph2
+    paragraph3
+    paragraph4
+    paragraph5
+  }
+  section2 {
+    __typename
+    title
+    callout
+    paragraph1
+    paragraph2
+    paragraph3
+    paragraph4
+  }
+  section3 {
+    __typename
+    title
+    paragraph1
+    paragraph2
+    callout
+  }
+  pullQuote
+  section4 {
+    __typename
+    title
+    paragraph1
+    paragraph2
+    callout
+    paragraph3
+    paragraph4
+  }
+  section5 {
+    __typename
+    title
+    rhythmTitle
+    morningText
+    afternoonText
+    nightText
+    closingText
+  }
+  closing {
+    __typename
+    title
+    paragraph1
+    paragraph2
+    paragraph3
+    paragraph4
+    paragraph5
+  }
+}

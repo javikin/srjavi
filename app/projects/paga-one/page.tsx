@@ -100,50 +100,47 @@ export default function PagaOnePage() {
       </nav>
 
       {/* Hero */}
-      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        {/* Animated Background Image */}
-        <motion.div
-          className="absolute inset-0 z-0"
-          initial={{ scale: 1.1 }}
-          animate={{ scale: 1 }}
-          transition={{ duration: 1.5, ease: [0.22, 1, 0.36, 1] }}
-        >
-          <Image
-            src="/images/projects/ref2.jpg"
-            alt="paga.one"
-            fill
-            className="object-cover"
-            priority
+      <section ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-background">
+        {/* Clean gradient background */}
+        <div className="absolute inset-0">
+          {/* Subtle gradient orbs */}
+          <motion.div
+            className="absolute top-0 right-0 w-[800px] h-[800px] bg-gradient-to-br from-emerald-500/10 via-teal-500/5 to-transparent rounded-full blur-3xl"
+            animate={{
+              scale: [1, 1.1, 1],
+              opacity: [0.5, 0.7, 0.5],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
           />
-          {/* Dynamic gradient overlay */}
-          <div className="absolute inset-0 bg-gradient-to-br from-emerald-950/95 via-background/90 to-blue-950/95" />
+          <motion.div
+            className="absolute bottom-0 left-0 w-[600px] h-[600px] bg-gradient-to-tr from-blue-500/10 via-emerald-500/5 to-transparent rounded-full blur-3xl"
+            animate={{
+              scale: [1.1, 1, 1.1],
+              opacity: [0.7, 0.5, 0.7],
+            }}
+            transition={{
+              duration: 10,
+              repeat: Infinity,
+              ease: "easeInOut",
+            }}
+          />
 
-          {/* Animated glow effects */}
-          <motion.div
-            className="absolute top-1/4 left-1/4 w-96 h-96 bg-emerald-500/20 rounded-full blur-3xl"
-            animate={{
-              scale: [1, 1.2, 1],
-              opacity: [0.3, 0.5, 0.3],
-            }}
-            transition={{
-              duration: 4,
-              repeat: Infinity,
-              ease: "easeInOut",
+          {/* Grid pattern overlay for texture */}
+          <div
+            className="absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `
+                linear-gradient(to right, currentColor 1px, transparent 1px),
+                linear-gradient(to bottom, currentColor 1px, transparent 1px)
+              `,
+              backgroundSize: '80px 80px',
             }}
           />
-          <motion.div
-            className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl"
-            animate={{
-              scale: [1.2, 1, 1.2],
-              opacity: [0.5, 0.3, 0.5],
-            }}
-            transition={{
-              duration: 5,
-              repeat: Infinity,
-              ease: "easeInOut",
-            }}
-          />
-        </motion.div>
+        </div>
 
         {/* Content */}
         <div className="relative max-w-7xl mx-auto px-6 lg:px-12 py-32 z-30 text-center">
@@ -401,6 +398,99 @@ export default function PagaOnePage() {
               </motion.div>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Product Showcase - Dashboard */}
+      <section className="relative py-32 overflow-hidden bg-gradient-to-b from-background via-surface/20 to-background">
+        {/* Background decorations */}
+        <div className="absolute top-1/4 left-0 w-[600px] h-[600px] bg-gradient-to-br from-emerald-500/5 to-transparent rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-0 w-[500px] h-[500px] bg-gradient-to-tl from-teal-500/5 to-transparent rounded-full blur-3xl" />
+
+        <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
+          {/* Section Header */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+          >
+            <span className="text-emerald-400 font-medium text-sm uppercase tracking-wider mb-4 block">
+              {t('showcaseTitle')}
+            </span>
+            <h2 className="text-4xl md:text-5xl font-bold">
+              <span className="bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
+                {t('showcaseSubtitle')}
+              </span>
+            </h2>
+          </motion.div>
+
+          {/* Dashboard Image */}
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true }}
+            className="relative max-w-3xl mx-auto"
+          >
+            {/* Glow effect behind phone */}
+            <div className="absolute inset-0 bg-gradient-to-r from-emerald-500/20 via-teal-500/20 to-blue-500/20 blur-3xl scale-90" />
+
+            {/* Phone mockup */}
+            <div className="relative">
+              <Image
+                src="/images/projects/pagaone-dashboard.png"
+                alt="paga.one Dashboard Interface"
+                width={800}
+                height={1600}
+                className="w-full h-auto drop-shadow-2xl"
+                priority
+              />
+            </div>
+
+            {/* Floating feature badges */}
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="absolute top-1/4 -left-4 md:-left-12"
+            >
+              <div className="px-4 py-3 rounded-2xl bg-surface/90 backdrop-blur-xl border border-emerald-500/30 shadow-xl">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">⚡</span>
+                  <span className="text-sm font-bold text-emerald-400">{t('showcaseBadge1')}</span>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              viewport={{ once: true }}
+              className="absolute bottom-1/3 -right-4 md:-right-12"
+            >
+              <div className="px-4 py-3 rounded-2xl bg-surface/90 backdrop-blur-xl border border-teal-500/30 shadow-xl">
+                <div className="flex items-center gap-2">
+                  <span className="text-2xl">🔒</span>
+                  <span className="text-sm font-bold text-teal-400">{t('showcaseBadge2')}</span>
+                </div>
+              </div>
+            </motion.div>
+          </motion.div>
+
+          {/* Bottom description */}
+          <motion.p
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            viewport={{ once: true }}
+            className="text-center text-lg text-text-secondary mt-12 max-w-2xl mx-auto leading-relaxed"
+          >
+            {t('showcaseDesc')}
+          </motion.p>
         </div>
       </section>
 

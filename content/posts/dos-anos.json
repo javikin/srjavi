@@ -1,0 +1,66 @@
+{
+  "title": "Dos Años",
+  "subtitle": "Una breve historia",
+  "date": "2025-11-20T00:00:00.000Z",
+  "readTime": "4 min",
+  "tags": [
+    "vida",
+    "carrillo",
+    "viaje"
+  ],
+  "hero": {
+    "image": "/images/journal/carrillo-studio/07-room-after-hero.jpg",
+    "alt": "Jardín tropical con casita de pájaros en Carrillo, Costa Rica"
+  },
+  "intro": {
+    "quote": "¿Todo cobra sentido, o uno le busca sentido?",
+    "paragraph1": "Hubo un momento dentro los últimos años en donde todo me quedó claro: el sentido a la vida es el que uno mismo decide darle. Pero durante los últimos dos años, no sabía qué respuesta darle o qué camino tomar.",
+    "paragraph2": "Después de dos años viviendo en cierta incertidumbre, entre decisiones, entre quien era y quien me sigo convirtiendo, me di cuenta que tal vez no se trata de buscar, sino de construir. Y eso que quieres construir debe ser algo que te emocione lo suficiente para lograrlo."
+  },
+  "section1": {
+    "title": "El Limbo",
+    "paragraph1": "Dejar Mérida no fue planeado. Mientras pasaba por una etapa de depresión, viajé a Carrillo una semana. Luego un mes. Terminé tomándome un año sabático buscando claridad en un lugar que me daba paz.",
+    "paragraph2": "Aún con tiempo libre, conocerse a uno mismo puede ser más difícil de lo esperado. Más cuando no sigues un patrón social.",
+    "paragraph3": "El tiempo pasó, el dinero se agotó. Regresé a trabajar pero sin saber qué quería hacer. Me gustaba la tranquilidad de Carrillo, pero sentía las preguntas no dichas: \"¿Ya te vas a establecer?\" \"¿Cuándo vas a tener pareja?\" ¿Se supone que eso debe ser parte de un plan?"
+  },
+  "section2": {
+    "title": "Entre Dos Mundos",
+    "callout": "Me sentía atrapado entre dos mundos, y no sabía cuál era el mío.",
+    "paragraph1": "¿Elegir paz y simplicidad era una decisión consciente o solo inercia? ¿Me estaba estableciendo o conformando?",
+    "paragraph2": "Estaba cansado. Cansado de no tener un lugar que fuera mío. Cansado de vivir en el limbo.",
+    "paragraph3": "La ciudad prometía todo lo que pensaba que debía querer. Momentum de carrera. Networking. Estar donde \"las cosas pasan.\"",
+    "paragraph4": "¿Pero a qué costo?"
+  },
+  "section3": {
+    "title": "Vivir el Presente",
+    "paragraph1": "Creo que la acumulación de momentos, como mañanas tranquilas donde puedo ir al gym temprano en bicicleta, saludar gente en el camino y disfrutar de la compañía en el gym local, me hacen empezar una mañana con más energía para estar más presente durante el resto del día.",
+    "paragraph2": "Hace que el tener que pasar horas frente a la computadora por mi trabajo ya no se sienta pesado. Además, la mayor recompensa son los días donde termino temprano para irme a una laguna a 5km en bicicleta, nadar y sentirme conectado con la naturaleza. Eso incentiva mi creatividad.",
+    "callout": ""
+  },
+  "pullQuote": "La vida que es más difícil de explicar suele ser la más fácil de vivir.",
+  "section4": {
+    "title": "",
+    "paragraph1": "",
+    "paragraph2": "",
+    "callout": "",
+    "paragraph3": "",
+    "paragraph4": ""
+  },
+  "section5": {
+    "title": "",
+    "paragraph1": "",
+    "rhythmTitle": "",
+    "morningText": "",
+    "afternoonText": "",
+    "nightText": "",
+    "closingText": ""
+  },
+  "closing": {
+    "title": "Sobre Tu Propio Tiempo",
+    "paragraph1": "Si estás leyendo esto desde tu propio período de incertidumbre, si te sientes atrapado entre dos lugares, dos caminos, dos versiones de quien podrías llegar a ser, quiero que sepas algo:",
+    "paragraph2": "No sabía dónde pertenecía cuando dejé Mérida. No lo sabía durante el primer año en Carrillo. Apenas lo sabía durante la mayor parte del segundo año.",
+    "paragraph3": "Pero lo sé ahora.",
+    "paragraph4": "Y lo único que pudo darme una respuesta a eso fue el tiempo. Escucharme. Sentirme. En especial esto último, ya que muchas veces nuestro cuerpo ya tiene la respuesta, pero nuestros miedos o constructos sociales nos impiden verlo.",
+    "paragraph5": "Ahí es cuando dejas de buscar y empiezas a construir. Y quién sabe, quizá termine siendo uno de los siguientes presidentes de la FCP."
+  }
+}

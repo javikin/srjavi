@@ -1,0 +1,69 @@
+{
+  "title": "El Ritmo que Encontré",
+  "subtitle": "Draft - Próximamente",
+  "date": "2025-12-01T00:00:00.000Z",
+  "readTime": "5 min",
+  "draft": true,
+  "tags": [
+    "vida",
+    "carrillo",
+    "rutina"
+  ],
+  "hero": {
+    "image": "/images/journal/carrillo-studio/09-night-setup.jpg",
+    "alt": "Setup de trabajo nocturno"
+  },
+  "intro": {
+    "quote": "El trabajo sucede en las horas tranquilas, cuando el mundo se ralentiza lo suficiente para que las ideas emerjan.",
+    "paragraph1": "Varios me han preguntado qué hago aquí, y la respuesta es tanto simple como complicada. Trabajo remotamente, proyectos que pagan las cuentas. Pero también trabajo en mis propias cosas.",
+    "paragraph2": "Proyectos personales que quizás no le hagan sentido a nadie más, pero me hacen sentido perfecto a mí."
+  },
+  "section1": {
+    "title": "Mis días tienen un ritmo ahora",
+    "paragraph1": "Mañanas en el jardín con café y código. El sol apenas saliendo, el café humeante, y las primeras líneas de código del día.",
+    "paragraph2": "Tardes intento explorar mi lado creativo con mi cámara y otros proyectos que estoy arrancando. Es el momento de experimentar, de probar cosas nuevas.",
+    "paragraph3": "Noches intento relajarme y prepararme para dormir temprano, aunque algunas noches las ideas no paran de fluir, y es el momento ideal para, con la tranquilidad, escribir todo para no olvidar y trabajar frescamente la mañana siguiente.",
+    "paragraph4": "",
+    "paragraph5": ""
+  },
+  "section2": {
+    "title": "El Acto Físico del Compromiso",
+    "callout": "Hay algo profundo en el acto físico de la transformación. El ir transformando un espacio con tus propias manos.",
+    "paragraph1": "Una vez que decidí quedarme, supe que necesitaba mi propio espacio. Un lugar en el que me sintiera cómodo y se identificara conmigo.",
+    "paragraph2": "Últimamente he empezado a creer que hay caminos que el universo tiene trazados para cada uno, y cuando logramos identificarlos todo se vuelve más claro y las cosas se alinean. Una semana fue lo que me tomó dar con el lugar perfecto: un espacio pequeño pero acogedor, con mucho potencial para convertirlo en el lugar que me va a ayudar a atravesar la siguiente etapa de mi vida.",
+    "paragraph3": "Tal vez no puedas construir tu camino a través de la incertidumbre, pero con la práctica mejoras y se va volviendo más fácil hacer cosas que antes pensabas que eran inimaginables.",
+    "paragraph4": ""
+  },
+  "section3": {
+    "title": "",
+    "paragraph1": "",
+    "paragraph2": "",
+    "callout": ""
+  },
+  "pullQuote": "El trabajo sucede en las horas tranquilas, cuando el mundo se ralentiza lo suficiente para que las ideas emerjan.",
+  "section4": {
+    "title": "",
+    "paragraph1": "",
+    "paragraph2": "",
+    "callout": "",
+    "paragraph3": "",
+    "paragraph4": ""
+  },
+  "section5": {
+    "title": "",
+    "paragraph1": "",
+    "rhythmTitle": "",
+    "morningText": "",
+    "afternoonText": "",
+    "nightText": "",
+    "closingText": ""
+  },
+  "closing": {
+    "title": "",
+    "paragraph1": "",
+    "paragraph2": "",
+    "paragraph3": "",
+    "paragraph4": "",
+    "paragraph5": ""
+  }
+}

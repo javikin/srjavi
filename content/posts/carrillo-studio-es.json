@@ -1,0 +1,39 @@
+{
+  "title": "Dos Años",
+  "subtitle": "Cómo finalmente elegí dónde pertenezco después de dos años de incertidumbre",
+  "date": "2025-11-20T00:00:00.000Z",
+  "readTime": "9 min",
+  "tags": ["vida", "carrillo", "viaje"],
+  "body": {
+    "type": "root",
+    "children": [
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "¿Todo cobra sentido, o uno le busca sentido?"
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Durante dos años, cada vez que alguien me preguntaba \"¿Y tú dónde vives?\", no sabía qué responder."
+          }
+        ]
+      },
+      {
+        "type": "p",
+        "children": [
+          {
+            "type": "text",
+            "text": "Después de dos años viviendo entre ciudades, entre decisiones, entre quien era y quien me sigo convirtiendo, me di cuenta que tal vez no se trata de buscar, sino de construir. Y eso que quieres construir lo sientes hasta en los huesos."
+          }
+        ]
+      }
+    ]
+  }
+}

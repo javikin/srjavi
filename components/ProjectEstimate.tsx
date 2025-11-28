@@ -279,6 +279,9 @@ Hablamos del proyecto?`;
               <p className="text-text-secondary text-sm">
                 {t('subscriptionDesc')} <strong className="text-blue-400">{Math.ceil(estimate.minEstimate / 10000)} - {Math.ceil(estimate.maxEstimate / 10000)} {t('subscriptionDesc2')}</strong> {t('subscriptionDesc3')}
               </p>
+              <p className="text-text-muted text-xs mt-3 pt-3 border-t border-blue-500/10">
+                {t('subscriptionNote')}
+              </p>
             </div>
           </div>
 

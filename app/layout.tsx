@@ -6,6 +6,7 @@ import DarkModeScript from '@/components/DarkModeScript';
 import PageTransition from '@/components/PageTransition';
 import { I18nProvider } from '@/lib/i18n-context';
 import PasswordProtect from '@/components/PasswordProtect';
+import { Analytics } from '@vercel/analytics/react';
 
 export const dynamic = 'force-dynamic';
 
@@ -53,7 +54,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${jetbrainsMono.variable}`}>
+    <html lang="en" className={`dark ${inter.variable} ${jetbrainsMono.variable}`}>
       <body>
         <DarkModeScript />
         <PageLoader />
@@ -64,6 +65,7 @@ export default function RootLayout({
             </PageTransition>
           </I18nProvider>
         </PasswordProtect>
+        <Analytics />
       </body>
     </html>
   );
