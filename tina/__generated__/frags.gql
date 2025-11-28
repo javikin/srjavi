@@ -68,5 +68,11 @@ fragment PostParts on Post {
     paragraph3
     paragraph4
     paragraph5
+    paragraph6
+  }
+  teaser {
+    __typename
+    text
+    authorImage
   }
 }

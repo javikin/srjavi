@@ -33,7 +33,7 @@
   },
   "section3": {
     "title": "Vivir el Presente",
-    "paragraph1": "Creo que la acumulación de momentos, como mañanas tranquilas donde puedo ir al gym temprano en bicicleta, saludar gente en el camino y disfrutar de la compañía en el gym local, me hacen empezar una mañana con más energía para estar más presente durante el resto del día.",
+    "paragraph1": "Creo que la acumulación de momentos, como mañanas tranquilas donde puedo ir al gym temprano en bicicleta, saludar gente en el camino y parar por un café a Punto Blanco, me hacen empezar una mañana con más energía para estar más presente durante el resto del día.",
     "paragraph2": "Hace que el tener que pasar horas frente a la computadora por mi trabajo ya no se sienta pesado. Además, la mayor recompensa son los días donde termino temprano para irme a una laguna a 5km en bicicleta, nadar y sentirme conectado con la naturaleza. Eso incentiva mi creatividad.",
     "callout": ""
   },
@@ -60,7 +60,12 @@
     "paragraph1": "Si estás leyendo esto desde tu propio período de incertidumbre, si te sientes atrapado entre dos lugares, dos caminos, dos versiones de quien podrías llegar a ser, quiero que sepas algo:",
     "paragraph2": "No sabía dónde pertenecía cuando dejé Mérida. No lo sabía durante el primer año en Carrillo. Apenas lo sabía durante la mayor parte del segundo año.",
     "paragraph3": "Pero lo sé ahora.",
-    "paragraph4": "Y lo único que pudo darme una respuesta a eso fue el tiempo. Escucharme. Sentirme. En especial esto último, ya que muchas veces nuestro cuerpo ya tiene la respuesta, pero nuestros miedos o constructos sociales nos impiden verlo.",
-    "paragraph5": "Ahí es cuando dejas de buscar y empiezas a construir. Y quién sabe, quizá termine siendo uno de los siguientes presidentes de la FCP."
+    "paragraph4": "Y lo único que pudo darme una respuesta a eso fue el tiempo. Escucharme y sentir. En especial esto último, ya que muchas veces nuestro cuerpo ya tiene la respuesta, pero nuestros miedos o constructos sociales nos impiden verlo.",
+    "paragraph5": "Ahí es cuando dejas de buscar y empiezas a construir.",
+    "paragraph6": "Y quién sabe, quizá termine como uno de los próximos presidentes de fcp."
+  },
+  "teaser": {
+    "text": "Estoy construyendo algo. Un espacio donde las ideas cobran forma. Pronto les cuento más...",
+    "authorImage": "/images/journal/carrillo-studio/10-author-portrait.jpg"
   }
 }

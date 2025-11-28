@@ -22,10 +22,7 @@ export default function Navigation() {
   }, []);
 
   const navLinks = [
-    { href: '#about', label: t('about') },
-    { href: '#work', label: t('work') },
     { href: '/journal', label: t('journal') },
-    { href: '#contact', label: t('contact') },
   ];
 
   return (

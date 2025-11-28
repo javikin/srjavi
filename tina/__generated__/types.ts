@@ -234,6 +234,13 @@ export type PostClosing = {
   paragraph3?: Maybe<Scalars['String']['output']>;
   paragraph4?: Maybe<Scalars['String']['output']>;
   paragraph5?: Maybe<Scalars['String']['output']>;
+  paragraph6?: Maybe<Scalars['String']['output']>;
+};
+
+export type PostTeaser = {
+  __typename?: 'PostTeaser';
+  text?: Maybe<Scalars['String']['output']>;
+  authorImage?: Maybe<Scalars['String']['output']>;
 };
 
 export type Post = Node & Document & {
@@ -252,6 +259,7 @@ export type Post = Node & Document & {
   section4?: Maybe<PostSection4>;
   section5?: Maybe<PostSection5>;
   closing?: Maybe<PostClosing>;
+  teaser?: Maybe<PostTeaser>;
   id: Scalars['ID']['output'];
   _sys: SystemInfo;
   _values: Scalars['JSON']['output'];
@@ -340,6 +348,12 @@ export type PostClosingFilter = {
   paragraph3?: InputMaybe<StringFilter>;
   paragraph4?: InputMaybe<StringFilter>;
   paragraph5?: InputMaybe<StringFilter>;
+  paragraph6?: InputMaybe<StringFilter>;
+};
+
+export type PostTeaserFilter = {
+  text?: InputMaybe<StringFilter>;
+  authorImage?: InputMaybe<ImageFilter>;
 };
 
 export type PostFilter = {
@@ -357,6 +371,7 @@ export type PostFilter = {
   section4?: InputMaybe<PostSection4Filter>;
   section5?: InputMaybe<PostSection5Filter>;
   closing?: InputMaybe<PostClosingFilter>;
+  teaser?: InputMaybe<PostTeaserFilter>;
 };
 
 export type PostConnectionEdges = {
@@ -498,6 +513,12 @@ export type PostClosingMutation = {
   paragraph3?: InputMaybe<Scalars['String']['input']>;
   paragraph4?: InputMaybe<Scalars['String']['input']>;
   paragraph5?: InputMaybe<Scalars['String']['input']>;
+  paragraph6?: InputMaybe<Scalars['String']['input']>;
+};
+
+export type PostTeaserMutation = {
+  text?: InputMaybe<Scalars['String']['input']>;
+  authorImage?: InputMaybe<Scalars['String']['input']>;
 };
 
 export type PostMutation = {
@@ -515,16 +536,17 @@ export type PostMutation = {
   section4?: InputMaybe<PostSection4Mutation>;
   section5?: InputMaybe<PostSection5Mutation>;
   closing?: InputMaybe<PostClosingMutation>;
+  teaser?: InputMaybe<PostTeaserMutation>;
 };
 
-export type PostPartsFragment = { __typename: 'Post', title: string, subtitle?: string | null, date: string, readTime?: string | null, tags?: Array<string | null> | null, pullQuote?: string | null, hero?: { __typename: 'PostHero', image?: string | null, alt?: string | null } | null, intro?: { __typename: 'PostIntro', quote?: string | null, paragraph1?: string | null, paragraph2?: string | null } | null, section1?: { __typename: 'PostSection1', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null, section2?: { __typename: 'PostSection2', title?: string | null, callout?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section3?: { __typename: 'PostSection3', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null } | null, section4?: { __typename: 'PostSection4', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section5?: { __typename: 'PostSection5', title?: string | null, rhythmTitle?: string | null, morningText?: string | null, afternoonText?: string | null, nightText?: string | null, closingText?: string | null } | null, closing?: { __typename: 'PostClosing', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null };
+export type PostPartsFragment = { __typename: 'Post', title: string, subtitle?: string | null, date: string, readTime?: string | null, tags?: Array<string | null> | null, pullQuote?: string | null, hero?: { __typename: 'PostHero', image?: string | null, alt?: string | null } | null, intro?: { __typename: 'PostIntro', quote?: string | null, paragraph1?: string | null, paragraph2?: string | null } | null, section1?: { __typename: 'PostSection1', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null, section2?: { __typename: 'PostSection2', title?: string | null, callout?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section3?: { __typename: 'PostSection3', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null } | null, section4?: { __typename: 'PostSection4', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section5?: { __typename: 'PostSection5', title?: string | null, rhythmTitle?: string | null, morningText?: string | null, afternoonText?: string | null, nightText?: string | null, closingText?: string | null } | null, closing?: { __typename: 'PostClosing', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null, paragraph6?: string | null } | null, teaser?: { __typename: 'PostTeaser', text?: string | null, authorImage?: string | null } | null };
 
 export type PostQueryVariables = Exact<{
   relativePath: Scalars['String']['input'];
 }>;
 
 
-export type PostQuery = { __typename?: 'Query', post: { __typename: 'Post', id: string, title: string, subtitle?: string | null, date: string, readTime?: string | null, tags?: Array<string | null> | null, pullQuote?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PostHero', image?: string | null, alt?: string | null } | null, intro?: { __typename: 'PostIntro', quote?: string | null, paragraph1?: string | null, paragraph2?: string | null } | null, section1?: { __typename: 'PostSection1', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null, section2?: { __typename: 'PostSection2', title?: string | null, callout?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section3?: { __typename: 'PostSection3', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null } | null, section4?: { __typename: 'PostSection4', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section5?: { __typename: 'PostSection5', title?: string | null, rhythmTitle?: string | null, morningText?: string | null, afternoonText?: string | null, nightText?: string | null, closingText?: string | null } | null, closing?: { __typename: 'PostClosing', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null } };
+export type PostQuery = { __typename?: 'Query', post: { __typename: 'Post', id: string, title: string, subtitle?: string | null, date: string, readTime?: string | null, tags?: Array<string | null> | null, pullQuote?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PostHero', image?: string | null, alt?: string | null } | null, intro?: { __typename: 'PostIntro', quote?: string | null, paragraph1?: string | null, paragraph2?: string | null } | null, section1?: { __typename: 'PostSection1', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null, section2?: { __typename: 'PostSection2', title?: string | null, callout?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section3?: { __typename: 'PostSection3', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null } | null, section4?: { __typename: 'PostSection4', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section5?: { __typename: 'PostSection5', title?: string | null, rhythmTitle?: string | null, morningText?: string | null, afternoonText?: string | null, nightText?: string | null, closingText?: string | null } | null, closing?: { __typename: 'PostClosing', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null, paragraph6?: string | null } | null, teaser?: { __typename: 'PostTeaser', text?: string | null, authorImage?: string | null } | null } };
 
 export type PostConnectionQueryVariables = Exact<{
   before?: InputMaybe<Scalars['String']['input']>;
@@ -536,7 +558,7 @@ export type PostConnectionQueryVariables = Exact<{
 }>;
 
 
-export type PostConnectionQuery = { __typename?: 'Query', postConnection: { __typename?: 'PostConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PostConnectionEdges', cursor: string, node?: { __typename: 'Post', id: string, title: string, subtitle?: string | null, date: string, readTime?: string | null, tags?: Array<string | null> | null, pullQuote?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PostHero', image?: string | null, alt?: string | null } | null, intro?: { __typename: 'PostIntro', quote?: string | null, paragraph1?: string | null, paragraph2?: string | null } | null, section1?: { __typename: 'PostSection1', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null, section2?: { __typename: 'PostSection2', title?: string | null, callout?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section3?: { __typename: 'PostSection3', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null } | null, section4?: { __typename: 'PostSection4', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section5?: { __typename: 'PostSection5', title?: string | null, rhythmTitle?: string | null, morningText?: string | null, afternoonText?: string | null, nightText?: string | null, closingText?: string | null } | null, closing?: { __typename: 'PostClosing', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null } | null } | null> | null } };
+export type PostConnectionQuery = { __typename?: 'Query', postConnection: { __typename?: 'PostConnection', totalCount: number, pageInfo: { __typename?: 'PageInfo', hasPreviousPage: boolean, hasNextPage: boolean, startCursor: string, endCursor: string }, edges?: Array<{ __typename?: 'PostConnectionEdges', cursor: string, node?: { __typename: 'Post', id: string, title: string, subtitle?: string | null, date: string, readTime?: string | null, tags?: Array<string | null> | null, pullQuote?: string | null, _sys: { __typename?: 'SystemInfo', filename: string, basename: string, hasReferences?: boolean | null, breadcrumbs: Array<string>, path: string, relativePath: string, extension: string }, hero?: { __typename: 'PostHero', image?: string | null, alt?: string | null } | null, intro?: { __typename: 'PostIntro', quote?: string | null, paragraph1?: string | null, paragraph2?: string | null } | null, section1?: { __typename: 'PostSection1', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null } | null, section2?: { __typename: 'PostSection2', title?: string | null, callout?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section3?: { __typename: 'PostSection3', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null } | null, section4?: { __typename: 'PostSection4', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, callout?: string | null, paragraph3?: string | null, paragraph4?: string | null } | null, section5?: { __typename: 'PostSection5', title?: string | null, rhythmTitle?: string | null, morningText?: string | null, afternoonText?: string | null, nightText?: string | null, closingText?: string | null } | null, closing?: { __typename: 'PostClosing', title?: string | null, paragraph1?: string | null, paragraph2?: string | null, paragraph3?: string | null, paragraph4?: string | null, paragraph5?: string | null, paragraph6?: string | null } | null, teaser?: { __typename: 'PostTeaser', text?: string | null, authorImage?: string | null } | null } | null } | null> | null } };
 
 export const PostPartsFragmentDoc = gql`
     fragment PostParts on Post {
@@ -609,6 +631,12 @@ export const PostPartsFragmentDoc = gql`
     paragraph3
     paragraph4
     paragraph5
+    paragraph6
+  }
+  teaser {
+    __typename
+    text
+    authorImage
   }
 }
     `;

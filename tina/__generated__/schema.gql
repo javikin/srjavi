@@ -148,6 +148,12 @@ type PostClosing {
   paragraph3: String
   paragraph4: String
   paragraph5: String
+  paragraph6: String
+}
+
+type PostTeaser {
+  text: String
+  authorImage: String
 }
 
 type Post implements Node & Document {
@@ -165,6 +171,7 @@ type Post implements Node & Document {
   section4: PostSection4
   section5: PostSection5
   closing: PostClosing
+  teaser: PostTeaser
   id: ID!
   _sys: SystemInfo!
   _values: JSON!
@@ -253,6 +260,12 @@ input PostClosingFilter {
   paragraph3: StringFilter
   paragraph4: StringFilter
   paragraph5: StringFilter
+  paragraph6: StringFilter
+}
+
+input PostTeaserFilter {
+  text: StringFilter
+  authorImage: ImageFilter
 }
 
 input PostFilter {
@@ -270,6 +283,7 @@ input PostFilter {
   section4: PostSection4Filter
   section5: PostSection5Filter
   closing: PostClosingFilter
+  teaser: PostTeaserFilter
 }
 
 type PostConnectionEdges {
@@ -363,6 +377,12 @@ input PostClosingMutation {
   paragraph3: String
   paragraph4: String
   paragraph5: String
+  paragraph6: String
+}
+
+input PostTeaserMutation {
+  text: String
+  authorImage: String
 }
 
 input PostMutation {
@@ -380,6 +400,7 @@ input PostMutation {
   section4: PostSection4Mutation
   section5: PostSection5Mutation
   closing: PostClosingMutation
+  teaser: PostTeaserMutation
 }
 
 schema {

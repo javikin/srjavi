@@ -698,6 +698,50 @@ export default function BlogPostEditable({
 
       {content.sections.map(renderSection)}
 
+      {/* Teaser section with author photo */}
+      {content.teaser && (
+        <section className="py-20 bg-surface">
+          <div className="max-w-4xl mx-auto px-6">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.8 }}
+              className="flex flex-col md:flex-row items-center gap-8 md:gap-12"
+            >
+              {/* Author photo */}
+              <div className="relative w-48 h-48 md:w-64 md:h-64 flex-shrink-0">
+                <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-mint/20 to-coral/20 blur-xl" />
+                <div className="relative w-full h-full rounded-2xl overflow-hidden border-2 border-white/10">
+                  <Image
+                    src={content.teaser.authorImage}
+                    alt="Javi - autor"
+                    fill
+                    className="object-cover"
+                  />
+                </div>
+              </div>
+
+              {/* Teaser text */}
+              <div className="text-center md:text-left">
+                <p className="text-xl md:text-2xl text-text-secondary leading-relaxed italic mb-4">
+                  {content.teaser.text}
+                </p>
+                <div className="flex items-center justify-center md:justify-start gap-2 text-mint">
+                  <span className="text-sm font-medium">Próximamente</span>
+                  <motion.span
+                    animate={{ x: [0, 4, 0] }}
+                    transition={{ duration: 1.5, repeat: Infinity }}
+                  >
+                    →
+                  </motion.span>
+                </div>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+      )}
+
       {editMode && (
         <div className="fixed bottom-4 left-1/2 -translate-x-1/2 bg-mint text-background px-4 py-2 rounded-full text-sm font-medium shadow-lg z-50">
           ✏️ Haz clic en cualquier texto para editarlo

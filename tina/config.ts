@@ -364,6 +364,30 @@ export default defineConfig({
                 label: "Paragraph 5",
                 ui: { component: "textarea" },
               },
+              {
+                type: "string",
+                name: "paragraph6",
+                label: "Paragraph 6",
+                ui: { component: "textarea" },
+              },
+            ],
+          },
+          {
+            type: "object",
+            name: "teaser",
+            label: "Teaser (Next Post)",
+            fields: [
+              {
+                type: "string",
+                name: "text",
+                label: "Teaser Text",
+                ui: { component: "textarea" },
+              },
+              {
+                type: "image",
+                name: "authorImage",
+                label: "Author Image",
+              },
             ],
           },
         ],

@@ -79,55 +79,6 @@ export default function ClientPage(props: any) {
 
   return (
     <>
-      {/* Edit Mode Toggle Button */}
-      {showPassword ? (
-        <div className="fixed top-4 right-4 z-50 bg-surface p-4 rounded-lg shadow-lg border border-white/20">
-          <div className="flex flex-col gap-2">
-            <p className="text-sm text-text-secondary mb-2">Enter password to edit:</p>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              placeholder="Password"
-              className="px-3 py-2 bg-background border border-white/10 rounded text-text-primary focus:outline-none focus:border-mint"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") handleToggleEditMode();
-              }}
-              autoFocus
-            />
-            <div className="flex gap-2">
-              <button
-                onClick={handleToggleEditMode}
-                className="px-4 py-2 bg-mint text-background rounded hover:bg-mint/80 transition-colors text-sm font-medium"
-              >
-                Activate Edit Mode
-              </button>
-              <button
-                onClick={() => {
-                  setShowPassword(false);
-                  setPassword("");
-                }}
-                className="px-4 py-2 bg-surface border border-white/10 text-text-secondary rounded hover:bg-white/5 transition-colors text-sm"
-              >
-                Cancel
-              </button>
-            </div>
-          </div>
-        </div>
-      ) : (
-        <button
-          onClick={handleToggleEditMode}
-          className={`fixed top-4 right-4 z-50 px-4 py-2 rounded-full font-medium transition-all shadow-lg ${
-            editMode
-              ? "bg-mint text-background hover:bg-mint/80 animate-pulse"
-              : "bg-surface border border-white/20 text-text-primary hover:bg-white/5"
-          }`}
-          title={editMode ? "Haz clic en los textos para editarlos" : "Activar modo de edición"}
-        >
-          {editMode ? "✏️ Editando" : "👁️ Ver"}
-        </button>
-      )}
-
       <BlogPostEditable
         content={content}
         backLabel="Volver al Journal"

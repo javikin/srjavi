@@ -1,7 +1,7 @@
 import { client } from '@/tina/__generated__/client';
 import ClientPage from './client-page';
 
-export default async function DosAnosPage() {
+export default async function BriefPage() {
   const result = await client.queries.post({
     relativePath: "dos-anos.json"
   });

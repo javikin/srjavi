@@ -97,12 +97,16 @@ export default function Footer({ showCTA = false, showEasterEgg = false }: Foote
       id="contact"
       ref={sectionRef}
       data-scroll-section
-      className="relative py-32 overflow-hidden bg-surface"
+      className={`relative overflow-hidden ${showCTA ? 'py-32 bg-surface' : 'pt-8 pb-12 bg-background'}`}
     >
-      {/* Subtle pastel orbs */}
-      <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky/8 rounded-full blur-3xl animate-pulse-slow" />
-      <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-mint/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '-2s' }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-coral/5 rounded-full blur-3xl" />
+      {/* Subtle pastel orbs - only show with CTA */}
+      {showCTA && (
+        <>
+          <div className="absolute top-0 left-1/4 w-96 h-96 bg-sky/8 rounded-full blur-3xl animate-pulse-slow" />
+          <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-mint/10 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '-2s' }} />
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-coral/5 rounded-full blur-3xl" />
+        </>
+      )}
 
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         {/* Main CTA - Only show if showCTA is true */}
@@ -147,7 +151,7 @@ export default function Footer({ showCTA = false, showEasterEgg = false }: Foote
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
           viewport={{ once: true }}
-          className="flex justify-center gap-6 mb-20"
+          className={`flex justify-center gap-6 ${showCTA ? 'mb-20' : 'mb-12'}`}
         >
           {socialLinks.map((link, index) => (
             <MagneticButton key={index}>

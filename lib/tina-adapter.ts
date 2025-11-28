@@ -39,6 +39,7 @@ export function tinaToBlogPost(tinaData: any) {
       readTime: tinaData.readTime,
     },
     hero: tinaData.hero,
+    teaser: tinaData.teaser,
     sections: [
       // Intro section
       {
@@ -94,7 +95,7 @@ export function tinaToBlogPost(tinaData: any) {
         image: {
           src: "/images/journal/carrillo-studio/08-working-garden.jpg",
           alt: "Trabajando con laptop en el jardín",
-          caption: "El jardín donde empiezan las mañanas con café y código",
+          caption: "El jardín donde empiezan ahora mis mañanas",
         },
         content: sectionToContent(tinaData.section3 || {}, "section3"),
       },

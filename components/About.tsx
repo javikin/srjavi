@@ -87,7 +87,7 @@ export default function About() {
       id="about"
       ref={sectionRef}
       data-scroll-section
-      className="relative py-32 pt-40 overflow-hidden bg-background"
+      className="relative pb-16 pt-40 overflow-hidden bg-background"
     >
       {/* Fade to next section */}
       <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-b from-transparent to-background pointer-events-none z-10" />
