@@ -53,8 +53,10 @@
     "title": "Latest Work",
     "projectLabel": "Project",
     "cta": "Let's Build Your Next Project",
-    "pagaoneDesc": "Split restaurant bills and share banking info with a simple link. No more asking for CLABEs. Built with Next.js 15, React 19, and Supabase. Live in production.",
-    "gainzDesc": "Smart workout tracker with science-backed recovery insights. Track every rep, optimize muscle recovery, crush PRs. Built for serious lifters who track data. 4.8★ rating."
+    "carpyDesc": "Marketplace to buy and sell cars safely in Mexico. Landing page with SEO optimization and lead generation.",
+    "peltaDesc": "Modern veterinary software. Schedule appointments, manage records, and let clients book online.",
+    "caimitoDesc": "Product catalog and sales control for an organic products business.",
+    "odenDesc": "Point of sale system for restaurants. Orders, tables, kitchen, and payments in real-time."
   },
   "about": {
     "title": "Hey, I'm Javi 👋",

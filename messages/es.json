@@ -53,8 +53,10 @@
     "title": "Últimos Trabajos",
     "projectLabel": "Proyecto",
     "cta": "Construyamos Tu Próximo Proyecto",
-    "pagaoneDesc": "Divide cuentas de restaurante y comparte información bancaria con un simple link. No más pedir CLABEs. Construido con Next.js 15, React 19, y Supabase. En producción.",
-    "gainzDesc": "Rastreador inteligente de entrenamientos con análisis de recuperación respaldado por ciencia. Rastrea cada repetición, optimiza recuperación muscular, rompe récords. Para levantadores serios que rastrean datos. 4.8★ rating."
+    "carpyDesc": "Marketplace para comprar y vender autos de forma segura en México. Landing page con SEO y generación de leads.",
+    "peltaDesc": "Software veterinario moderno. Agenda citas, gestiona expedientes y permite que clientes agenden online.",
+    "caimitoDesc": "Catálogo de productos y control de ventas para negocio de productos orgánicos.",
+    "odenDesc": "Sistema punto de venta para restaurantes. Órdenes, mesas, cocina y pagos en tiempo real."
   },
   "about": {
     "title": "Hola, soy Javi 👋",

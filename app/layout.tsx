@@ -8,6 +8,7 @@ import { I18nProvider } from '@/lib/i18n-context';
 import PasswordProtect from '@/components/PasswordProtect';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 
 export const dynamic = 'force-dynamic';
 
@@ -68,6 +69,9 @@ export default function RootLayout({
         </PasswordProtect>
         <Analytics />
         <SpeedInsights />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );

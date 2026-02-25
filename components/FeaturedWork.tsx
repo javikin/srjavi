@@ -1,274 +1,40 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { motion } from 'framer-motion';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useTranslations } from '@/lib/i18n-context';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
 
 gsap.registerPlugin(ScrollTrigger);
-
-interface ProjectProps {
-  title: string;
-  description: string;
-  image: string;
-  tags: string[];
-  link: string;
-  index: number;
-}
 
 interface FeaturedWorkProps {
   showCTA?: boolean;
 }
 
-function ProjectCard({ title, description, image, tags, link, index }: ProjectProps) {
-  const t = useTranslations('work');
-  const router = useRouter();
-  const cardRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
+type ProjectType = 'client' | 'pro-bono' | 'personal';
 
-  const { scrollYProgress } = useScroll({
-    target: cardRef,
-    offset: ['start end', 'end start'],
-  });
-
-  const y = useTransform(scrollYProgress, [0, 1], [100, -100]);
-  const opacity = useTransform(scrollYProgress, [0, 0.3, 0.7, 1], [0, 1, 1, 0]);
-
-  // Zoom effect for image (Jason Briscoe style)
-  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [1.2, 1, 1.2]);
-
-  useEffect(() => {
-    if (!cardRef.current || !imageRef.current) return;
-
-    const ctx = gsap.context(() => {
-      gsap.fromTo(
-        cardRef.current,
-        {
-          x: index % 2 === 0 ? -100 : 100,
-          opacity: 0,
-        },
-        {
-          x: 0,
-          opacity: 1,
-          duration: 1.2,
-          ease: 'power3.out',
-          scrollTrigger: {
-            trigger: cardRef.current,
-            start: 'top 80%',
-          },
-        }
-      );
-
-      // Image reveal animation
-      gsap.fromTo(
-        imageRef.current,
-        {
-          clipPath: 'inset(100% 0% 0% 0%)',
-        },
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          duration: 1.5,
-          ease: 'power4.out',
-          scrollTrigger: {
-            trigger: imageRef.current,
-            start: 'top 80%',
-          },
-        }
-      );
-    }, cardRef);
-
-    return () => ctx.revert();
-  }, [index]);
-
-  return (
-    <motion.div
-      ref={cardRef}
-      style={{ opacity }}
-      className="project-card group relative grid md:grid-cols-2 gap-8 items-center"
-    >
-      {/* Image */}
-      <motion.div
-        style={{ y: index % 2 === 0 ? y : undefined }}
-        className={`relative h-[400px] md:h-[500px] rounded-3xl overflow-hidden ${
-          index % 2 === 0 ? 'md:order-1' : 'md:order-2'
-        }`}
-      >
-        <motion.div
-          ref={imageRef}
-          data-project-image
-          style={{ scale }}
-          className="absolute inset-0 w-full h-full"
-        >
-          <div
-            className="absolute inset-0 w-full h-full"
-            style={{
-              filter: 'grayscale(100%)',
-              transition: 'filter 0.5s ease',
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLDivElement).style.filter = 'grayscale(50%)';
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLDivElement).style.filter = 'grayscale(100%)';
-            }}
-          >
-            <Image
-              src={image}
-              alt={title}
-              fill
-              className="object-cover"
-            />
-          </div>
-        </motion.div>
-
-        {/* Overlay on hover */}
-        <div className="absolute inset-0 bg-gradient-to-t from-background/90 via-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 flex items-end p-8">
-          <motion.button
-            onClick={(e) => {
-              e.preventDefault();
-
-              if (link.startsWith('/')) {
-                // Store transition type in sessionStorage
-                sessionStorage.setItem('pageTransition', 'overlay');
-
-                // Navigate after small delay
-                setTimeout(() => {
-                  router.push(link);
-                }, 50);
-              } else {
-                window.open(link, '_blank', 'noopener,noreferrer');
-              }
-            }}
-            className="text-text-primary hover:text-text-secondary font-medium cursor-pointer transition-colors"
-          >
-            View Project →
-          </motion.button>
-        </div>
-      </motion.div>
-
-      {/* Content */}
-      <div className={`space-y-6 ${index % 2 === 0 ? 'md:order-2' : 'md:order-1'}`}>
-        <motion.h3
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          viewport={{ once: true }}
-          className="text-4xl md:text-5xl font-bold text-text-primary"
-        >
-          {title}
-        </motion.h3>
-
-        <motion.p
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-          viewport={{ once: true }}
-          className="text-lg text-text-secondary leading-relaxed"
-        >
-          {description}
-        </motion.p>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5 }}
-          viewport={{ once: true }}
-          className="flex flex-wrap gap-3"
-        >
-          {tags.map((tag, i) => (
-            <span
-              key={i}
-              className="px-4 py-2 rounded-full bg-surface border border-primary/30 text-sm font-medium text-text-secondary"
-            >
-              {tag}
-            </span>
-          ))}
-        </motion.div>
-
-        {/* View Project Link - Primary CTA */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.6 }}
-          viewport={{ once: true }}
-          className="pt-4"
-        >
-          <button
-            onClick={(e) => {
-              e.preventDefault();
-
-              if (link.startsWith('/')) {
-                // Store transition type in sessionStorage
-                sessionStorage.setItem('pageTransition', 'overlay');
-
-                // Navigate after small delay
-                setTimeout(() => {
-                  router.push(link);
-                }, 50);
-              } else {
-                window.open(link, '_blank', 'noopener,noreferrer');
-              }
-            }}
-            className="inline-flex items-center gap-2 text-emerald-400 hover:text-emerald-300 transition-colors text-lg font-bold group cursor-pointer"
-          >
-            <span>View Project</span>
-            <svg className="w-5 h-5 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-            </svg>
-          </button>
-        </motion.div>
-
-        {/* Visit App Link - Secondary */}
-        {link === '/projects/paga-one' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            viewport={{ once: true }}
-            className="pt-2"
-          >
-            <a
-              href="https://paga.one"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors text-sm font-medium group"
-            >
-              <span>Visit paga.one</span>
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </motion.div>
-        )}
-
-        {link === '/projects/fit' && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.7 }}
-            viewport={{ once: true }}
-            className="pt-2"
-          >
-            <a
-              href="https://gainz-fit.web.app"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-text-secondary hover:text-text-primary transition-colors text-sm font-medium group"
-            >
-              <span>Try Gainz</span>
-              <svg className="w-4 h-4 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </a>
-          </motion.div>
-        )}
-      </div>
-    </motion.div>
-  );
+interface Project {
+  title: string;
+  description: string;
+  image: string;
+  tags: string[];
+  url: string;
+  type: ProjectType;
 }
+
+const typeBadgeLabel: Record<ProjectType, string> = {
+  client: 'Client',
+  'pro-bono': 'Pro Bono',
+  personal: 'Personal',
+};
+
+const typeBadgeColor: Record<ProjectType, string> = {
+  client: 'bg-mint/10 text-mint border-mint/20',
+  'pro-bono': 'bg-sky/10 text-sky border-sky/20',
+  personal: 'bg-lavender/10 text-lavender border-lavender/20',
+};
 
 export default function FeaturedWork({ showCTA = false }: FeaturedWorkProps) {
   const t = useTranslations('work');
@@ -280,10 +46,7 @@ export default function FeaturedWork({ showCTA = false }: FeaturedWorkProps) {
 
     gsap.fromTo(
       titleRef.current,
-      {
-        y: 50,
-        opacity: 0,
-      },
+      { y: 50, opacity: 0 },
       {
         y: 0,
         opacity: 1,
@@ -297,22 +60,38 @@ export default function FeaturedWork({ showCTA = false }: FeaturedWorkProps) {
     );
   }, []);
 
-  const projects = [
+  const projects: Project[] = [
     {
-      title: 'paga.one',
-      description: t('pagaoneDesc'),
-      image: '/images/projects/pagaone-hero.png',
-      tags: ['Next.js 15', 'React 19', 'Supabase', 'Payments', 'PWA'],
-      link: '/projects/paga-one',
-      transition: 'overlay', // Color overlay transition
+      title: 'Carpy',
+      description: t('carpyDesc'),
+      image: '/images/projects/carpy-hero.png',
+      tags: ['Next.js', 'Supabase', 'Vercel', 'SEO'],
+      url: 'https://carpy.mx',
+      type: 'client',
     },
     {
-      title: 'Gainz',
-      description: t('gainzDesc'),
-      image: '/images/projects/fit-hero.png',
-      tags: ['Flutter', 'Dart', 'Riverpod', 'Drift', 'Supabase', 'Material 3'],
-      link: '/projects/fit',
-      transition: 'overlay',
+      title: 'Pelta',
+      description: t('peltaDesc'),
+      image: '/images/projects/pelta-hero.png',
+      tags: ['Next.js', 'Supabase', 'Tailwind', 'SaaS'],
+      url: 'https://pelta.app',
+      type: 'pro-bono',
+    },
+    {
+      title: 'Caimito Silvestre',
+      description: t('caimitoDesc'),
+      image: '/images/projects/caimito-hero.png',
+      tags: ['Next.js', 'Supabase', 'E-commerce'],
+      url: 'https://caimito.vercel.app',
+      type: 'pro-bono',
+    },
+    {
+      title: 'Oden POS',
+      description: t('odenDesc'),
+      image: '/images/projects/oden-hero.png',
+      tags: ['Next.js', 'Supabase', 'Real-time', 'POS'],
+      url: 'https://www.oden.food',
+      type: 'personal',
     },
   ];
 
@@ -333,25 +112,107 @@ export default function FeaturedWork({ showCTA = false }: FeaturedWorkProps) {
       <div className="relative max-w-7xl mx-auto px-6 lg:px-12">
         <motion.h2
           ref={titleRef}
-          className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-20 text-center"
+          className="text-5xl md:text-6xl lg:text-7xl font-bold text-text-primary mb-16 text-center"
         >
           {t('title')}
         </motion.h2>
 
-        <div className="space-y-32">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {projects.map((project, index) => (
-            <ProjectCard key={index} {...project} index={index} />
+            <motion.a
+              key={project.title}
+              href={project.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 32 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1, ease: 'easeOut' }}
+              viewport={{ once: true }}
+              className="group block rounded-2xl bg-background border border-white/5 overflow-hidden hover:border-white/10 transition-colors duration-300"
+            >
+              {/* Image container */}
+              <div className="relative aspect-[16/10] overflow-hidden">
+                <div
+                  className="absolute inset-0 w-full h-full transition-all duration-500"
+                  style={{ filter: 'grayscale(100%)' }}
+                  onMouseEnter={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.filter = 'grayscale(0%)';
+                  }}
+                  onMouseLeave={(e) => {
+                    (e.currentTarget as HTMLDivElement).style.filter = 'grayscale(100%)';
+                  }}
+                >
+                  <motion.div
+                    className="absolute inset-0 w-full h-full"
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.5, ease: 'easeOut' }}
+                  >
+                    <Image
+                      src={project.image}
+                      alt={project.title}
+                      fill
+                      className="object-cover"
+                    />
+                  </motion.div>
+                </div>
+
+                {/* Type badge — top right corner */}
+                <span
+                  className={`absolute top-3 right-3 px-2.5 py-1 rounded-full text-xs font-medium border backdrop-blur-sm ${typeBadgeColor[project.type]}`}
+                >
+                  {typeBadgeLabel[project.type]}
+                </span>
+              </div>
+
+              {/* Card content */}
+              <div className="p-6 space-y-3">
+                <div className="flex items-center justify-between gap-4">
+                  <h3 className="text-xl font-bold text-text-primary group-hover:text-primary transition-colors duration-300">
+                    {project.title}
+                  </h3>
+                  {/* External link arrow */}
+                  <svg
+                    className="w-4 h-4 text-text-muted group-hover:text-primary group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all duration-300 flex-shrink-0"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth={2}
+                      d="M7 17L17 7M17 7H7M17 7v10"
+                    />
+                  </svg>
+                </div>
+
+                <p className="text-sm text-text-secondary leading-relaxed line-clamp-2">
+                  {project.description}
+                </p>
+
+                <div className="flex flex-wrap gap-2 pt-1">
+                  {project.tags.map((tag) => (
+                    <span
+                      key={tag}
+                      className="px-2.5 py-1 rounded-full bg-surface border border-primary/20 text-xs font-medium text-text-secondary"
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </motion.a>
           ))}
         </div>
 
-        {/* CTA - Only show if showCTA is true */}
+        {/* CTA — only show if showCTA is true */}
         {showCTA && (
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
             viewport={{ once: true }}
-            className="text-center mt-20"
+            className="text-center mt-16"
           >
             <a
               href="#contact"
