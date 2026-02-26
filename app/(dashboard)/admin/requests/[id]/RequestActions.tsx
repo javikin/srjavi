@@ -99,10 +99,10 @@ export default function RequestActions({
   async function handleCreateGithubIssue() {
     clearMessages();
     startTransition(async () => {
-      const res = await fetch(`/api/requests/${requestId}/github-issue`, {
+      const res = await fetch('/api/github/create-issue', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ title: requestTitle, body: requestBody }),
+        body: JSON.stringify({ requestId }),
       });
 
       if (!res.ok) {

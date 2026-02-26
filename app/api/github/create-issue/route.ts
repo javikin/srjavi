@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, AuthError } from '@/lib/api-auth';
 import { createClient } from '@/lib/supabase/server';
+import { createGitHubIssue } from '@/lib/github';
+import type { Project, Request } from '@/lib/types/database';
 
 export async function POST(request: NextRequest) {
   try {
@@ -17,10 +19,10 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Get the request
+    // Get the request with project info
     const { data: req, error: reqError } = await supabase
       .from('requests')
-      .select('*, projects(github_repo_owner, github_repo_name)')
+      .select('*, projects(*)')
       .eq('id', requestId)
       .single();
 
@@ -35,19 +37,27 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Placeholder: simulate GitHub issue creation
-    // In production, this would call the GitHub API
-    const mockIssueNumber = Math.floor(Math.random() * 9000) + 1000;
-    const repoOwner = req.projects?.github_repo_owner ?? 'placeholder';
-    const repoName = req.projects?.github_repo_name ?? 'placeholder';
-    const mockIssueUrl = `https://github.com/${repoOwner}/${repoName}/issues/${mockIssueNumber}`;
+    const project = (Array.isArray(req.projects) ? req.projects[0] : req.projects) as Project | null;
+
+    if (!project?.github_repo_owner || !project?.github_repo_name) {
+      return NextResponse.json(
+        { error: 'El proyecto no tiene un repositorio de GitHub configurado' },
+        { status: 400 }
+      );
+    }
+
+    // Create real GitHub issue
+    const { number: issueNumber, url: issueUrl } = await createGitHubIssue(
+      req as unknown as Request,
+      project,
+    );
 
     // Update request with GitHub issue info
     const { data: updatedRequest, error: updateError } = await supabase
       .from('requests')
       .update({
-        github_issue_number: mockIssueNumber,
-        github_issue_url: mockIssueUrl,
+        github_issue_number: issueNumber,
+        github_issue_url: issueUrl,
       })
       .eq('id', requestId)
       .select()
@@ -65,9 +75,8 @@ export async function POST(request: NextRequest) {
       entity_type: 'request',
       entity_id: requestId,
       metadata: {
-        github_issue_number: mockIssueNumber,
-        github_issue_url: mockIssueUrl,
-        placeholder: true,
+        github_issue_number: issueNumber,
+        github_issue_url: issueUrl,
       },
     });
 
@@ -75,9 +84,8 @@ export async function POST(request: NextRequest) {
       data: {
         request: updatedRequest,
         github_issue: {
-          number: mockIssueNumber,
-          url: mockIssueUrl,
-          placeholder: true,
+          number: issueNumber,
+          url: issueUrl,
         },
       },
     }, { status: 201 });
@@ -85,6 +93,7 @@ export async function POST(request: NextRequest) {
     if (error instanceof AuthError) {
       return NextResponse.json({ error: error.message }, { status: error.status });
     }
-    return NextResponse.json({ error: 'Error interno del servidor' }, { status: 500 });
+    const message = error instanceof Error ? error.message : 'Error interno del servidor';
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
