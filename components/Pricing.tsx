@@ -71,6 +71,33 @@ export default function Pricing() {
     },
   ];
 
+  const lifecycleSteps = [
+    {
+      number: '01',
+      title: t('buildTitle'),
+      desc: t('buildDesc'),
+      color: 'from-emerald-400 to-teal-400',
+      bgColor: 'bg-emerald-500/5',
+      borderColor: 'border-emerald-500/20',
+    },
+    {
+      number: '02',
+      title: t('launchTitle'),
+      desc: t('launchDesc'),
+      color: 'from-sky-400 to-blue-400',
+      bgColor: 'bg-sky-500/5',
+      borderColor: 'border-sky-500/20',
+    },
+    {
+      number: '03',
+      title: t('growTitle'),
+      desc: t('growDesc'),
+      color: 'from-purple-400 to-pink-400',
+      bgColor: 'bg-purple-500/5',
+      borderColor: 'border-purple-500/20',
+    },
+  ];
+
   return (
     <section
       ref={sectionRef}
@@ -136,40 +163,146 @@ export default function Pricing() {
           <p className="text-xl md:text-2xl text-text-secondary max-w-3xl mx-auto leading-relaxed">
             {t('subtitle')}
           </p>
-          <p className="text-sm text-text-muted max-w-2xl mx-auto mt-4">
-            {t('promoNote')}
-          </p>
         </motion.div>
 
-        {/* Compact Pricing Info */}
+        {/* How It Works - Lifecycle */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="text-center mb-12"
+        >
+          <h3 className="text-2xl md:text-3xl font-bold text-text-primary mb-2">
+            {t('howItWorksTitle')}
+          </h3>
+        </motion.div>
+
+        <div className="max-w-4xl mx-auto mb-24">
+          <div className="grid md:grid-cols-3 gap-0">
+            {lifecycleSteps.map((step, index) => (
+              <div key={index} className="flex items-stretch">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.15 }}
+                  className={`flex-1 p-6 rounded-2xl ${step.bgColor} border ${step.borderColor}`}
+                >
+                  <div className={`text-4xl font-bold bg-gradient-to-r ${step.color} bg-clip-text text-transparent mb-3`}>
+                    {step.number}
+                  </div>
+                  <h4 className="text-lg font-bold text-text-primary mb-2 uppercase tracking-wider">
+                    {step.title}
+                  </h4>
+                  <p className="text-sm text-text-secondary leading-relaxed">
+                    {step.desc}
+                  </p>
+                </motion.div>
+                {index < lifecycleSteps.length - 1 && (
+                  <div className="hidden md:flex items-center px-2 text-text-muted">
+                    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M4 10h12M12 5l5 5-5 5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
+                    </svg>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Pricing Cards - 2 tiers */}
+        <div className="max-w-3xl mx-auto mb-16">
+          <div className="pricing-grid grid md:grid-cols-2 gap-6">
+            {/* Esencial */}
+            <motion.div
+              className="pricing-card relative p-8 rounded-3xl bg-surface border border-white/10"
+            >
+              <div className="mb-6">
+                <h3 className="text-xl font-bold text-text-primary mb-1">{t('esencial')}</h3>
+                <div className="flex items-baseline gap-2 mt-4 mb-1">
+                  <span className="text-4xl font-bold text-text-primary">$10,000</span>
+                  <span className="text-text-secondary text-sm">MXN + IVA</span>
+                </div>
+                <p className="text-text-muted text-sm">{t('perMonth')}</p>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted flex-shrink-0" />
+                  <span className="text-sm text-text-secondary">{t('esencialCredits')}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted flex-shrink-0" />
+                  <span className="text-sm text-text-secondary">{t('esencialResponse')}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-text-muted flex-shrink-0" />
+                  <span className="text-sm text-text-secondary">{t('esencialConcurrent')}</span>
+                </li>
+              </ul>
+            </motion.div>
+
+            {/* Crecimiento - highlighted */}
+            <motion.div
+              className="pricing-card relative p-8 rounded-3xl bg-surface border border-emerald-500/40"
+            >
+              <div className="absolute top-4 right-4">
+                <span className="text-xs px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 font-medium">
+                  {t('recommended')}
+                </span>
+              </div>
+              <div className="mb-6">
+                <h3 className="text-xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent mb-1">
+                  {t('crecimiento')}
+                </h3>
+                <div className="flex items-baseline gap-2 mt-4 mb-1">
+                  <span className="text-4xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">$16,000</span>
+                  <span className="text-text-secondary text-sm">MXN + IVA</span>
+                </div>
+                <p className="text-text-muted text-sm">{t('perMonth')}</p>
+              </div>
+              <ul className="space-y-3">
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                  <span className="text-sm text-text-secondary">{t('crecimientoCredits')}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                  <span className="text-sm text-text-secondary">{t('crecimientoResponse')}</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                  <span className="text-sm text-text-secondary">{t('crecimientoConcurrent')}</span>
+                </li>
+              </ul>
+            </motion.div>
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.3 }}
+            className="text-center text-sm text-text-muted mt-6"
+          >
+            {t('pauseCancel')}
+          </motion.p>
+        </div>
+
+        {/* Key Features Grid */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.7 }}
-          className="max-w-3xl mx-auto mb-24 text-center"
+          className="max-w-3xl mx-auto mb-24"
         >
-          {/* Price */}
-          <div className="mb-12">
-            <div className="inline-block px-4 py-2 rounded-full bg-emerald-500/10 border border-emerald-500/30 mb-6">
-              <span className="text-sm font-medium text-emerald-400">✨ {t('launchOffer')}</span>
-            </div>
-            <div className="flex items-baseline justify-center gap-2 mb-4">
-              <span className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-emerald-400 to-teal-400 bg-clip-text text-transparent">
-                $10K
-              </span>
-              <span className="text-2xl text-text-secondary">MXN + IVA</span>
-            </div>
-            <p className="text-text-secondary">{t('perMonth')} · {t('pauseCancel')}</p>
-          </div>
-
-          {/* Key Features - Compact Grid */}
           <div className="grid md:grid-cols-2 gap-6 text-left">
             {[
-              { icon: '🚀', title: t('feature1'), desc: t('feature1Desc') },
-              { icon: '⚡', title: t('feature2'), desc: t('feature2Desc') },
-              { icon: '🎯', title: t('feature3'), desc: t('feature3Desc') },
-              { icon: '💎', title: t('feature4'), desc: t('feature4Desc') },
+              { title: t('feature1'), desc: t('feature1Desc') },
+              { title: t('feature2'), desc: t('feature2Desc') },
+              { title: t('feature3'), desc: t('feature3Desc') },
+              { title: t('feature4'), desc: t('feature4Desc') },
             ].map((feature, index) => (
               <motion.div
                 key={index}
@@ -179,15 +312,10 @@ export default function Pricing() {
                 transition={{ delay: index * 0.1 }}
                 className="flex items-start gap-3"
               >
-                <div className="text-2xl flex-shrink-0">{feature.icon}</div>
+                <div className="w-1.5 h-1.5 rounded-full bg-gradient-to-r from-emerald-500 to-teal-500 mt-2 flex-shrink-0" />
                 <div>
                   <h3 className="font-bold text-text-primary mb-1">
                     {feature.title}
-                    {index === 0 && (
-                      <span className="ml-2 text-xs px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-normal">
-                        Promo
-                      </span>
-                    )}
                   </h3>
                   <p className="text-sm text-text-secondary">{feature.desc}</p>
                 </div>
@@ -202,17 +330,20 @@ export default function Pricing() {
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            className="text-center mb-12"
+            className="text-center mb-4"
           >
             <h3 className="text-3xl md:text-4xl font-bold text-text-primary mb-4">
               {t('priorityTitle')}
             </h3>
-            <p className="text-lg text-text-secondary max-w-2xl mx-auto">
+            <p className="text-lg text-text-secondary max-w-2xl mx-auto mb-2">
               {t('priorityDesc')}
+            </p>
+            <p className="text-sm text-text-muted">
+              {t('priorityNote')}
             </p>
           </motion.div>
 
-          <div className="pricing-grid grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="pricing-grid grid grid-cols-2 md:grid-cols-4 gap-4 mt-12">
             {priorityTiers.map((tier, index) => (
               <motion.div
                 key={index}
