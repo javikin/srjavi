@@ -5,11 +5,11 @@ import CreditBar from '@/components/dashboard/CreditBar';
 import StatsCard from '@/components/dashboard/StatsCard';
 
 const CREDIT_COST_REFERENCE = [
-  { label: 'Bug simple', description: 'Error de pantalla, typo, ajuste visual', cost: 2 },
-  { label: 'Bug complejo', description: 'Error de logica, fallo de datos', cost: 4 },
-  { label: 'Feature pequena', description: 'Campo nuevo, ajuste de flujo', cost: 6 },
-  { label: 'Feature mediana', description: 'Nueva pantalla o modulo', cost: 12 },
-  { label: 'Feature grande', description: 'Integracion, sistema complejo', cost: 25 },
+  { label: 'Bug fix', description: 'Errores en codigo entregado por nosotros', cost: 0, note: 'Gratis' },
+  { label: 'Feature pequena', description: 'Campo nuevo, ajuste de flujo, cambio visual', cost: 4 },
+  { label: 'Feature mediana', description: 'Nueva pantalla o modulo', cost: 10 },
+  { label: 'Feature grande', description: 'Integracion, sistema complejo', cost: 20 },
+  { label: 'Bug externo', description: 'Causado por cambios del cliente o APIs de terceros', cost: 3 },
 ];
 
 function formatMonth(dateStr: string): string {
@@ -123,9 +123,15 @@ export default async function CreditsPage({
                   <td className="py-3 pr-4 font-medium text-text-primary">{item.label}</td>
                   <td className="py-3 pr-4 text-text-muted text-xs">{item.description}</td>
                   <td className="py-3 text-right">
-                    <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 tabular-nums">
-                      {item.cost} cr
-                    </span>
+                    {item.cost === 0 ? (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-mint/10 text-mint border border-mint/20">
+                        Gratis
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20 tabular-nums">
+                        {item.cost} cr
+                      </span>
+                    )}
                   </td>
                 </tr>
               ))}

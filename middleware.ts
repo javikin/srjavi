@@ -20,6 +20,8 @@ const PUBLIC_PREFIXES = [
   '/projects/',
   '/api/tina/',
   '/api/github/webhook',
+  '/api/cron/',
+  '/auth/callback',
   '/_next/',
   '/favicon',
   '/images/',

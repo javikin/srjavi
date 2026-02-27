@@ -12,8 +12,9 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(searchParams.get('error'));
   const [loading, setLoading] = useState(false);
+  const successMessage = searchParams.get('message');
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -90,6 +91,11 @@ export default function LoginPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-5">
+        {successMessage && (
+          <div className="p-3 rounded-lg bg-mint/10 border border-mint/20">
+            <p className="text-sm text-mint">{successMessage}</p>
+          </div>
+        )}
         {error && (
           <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20">
             <p className="text-sm text-red-400">{error}</p>

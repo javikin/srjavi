@@ -48,13 +48,14 @@ export async function POST(request: NextRequest) {
     if (existingProfile) {
       userId = existingProfile.id;
     } else {
-      // Create user via Supabase Auth admin API
-      const { data: authData, error: authError } = await adminSupabase.auth.admin.createUser({
+      // Invite user via Supabase Auth — sends email with invite link
+      const { data: authData, error: authError } = await adminSupabase.auth.admin.inviteUserByEmail(
         email,
-        email_confirm: true,
-        user_metadata: { full_name },
-        app_metadata: { role: 'client' },
-      });
+        {
+          data: { full_name },
+          redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? 'https://srjavi.com'}/auth/callback`,
+        },
+      );
 
       if (authError) {
         if (authError.message?.includes('already been registered')) {
@@ -63,11 +64,16 @@ export async function POST(request: NextRequest) {
             { status: 409 }
           );
         }
-        console.error('Error creando usuario:', authError);
-        return NextResponse.json({ error: 'Error al crear usuario' }, { status: 500 });
+        console.error('Error invitando usuario:', authError);
+        return NextResponse.json({ error: 'Error al enviar la invitacion' }, { status: 500 });
       }
 
       userId = authData.user.id;
+
+      // Set app_metadata role to client
+      await adminSupabase.auth.admin.updateUserById(userId, {
+        app_metadata: { role: 'client' },
+      });
     }
 
     // Add user to project

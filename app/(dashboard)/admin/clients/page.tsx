@@ -1,11 +1,14 @@
 import Link from 'next/link';
 import { createClient } from '@/lib/supabase/server';
+import { createAdminClient } from '@/lib/supabase/server';
 import PageHeader from '@/components/dashboard/PageHeader';
 import EmptyState from '@/components/dashboard/EmptyState';
 
 export default async function ClientsPage() {
   const supabase = await createClient();
+  const adminSupabase = createAdminClient();
 
+  // Fetch client profiles
   const { data: clients } = await supabase
     .from('profiles')
     .select(`
@@ -18,6 +21,19 @@ export default async function ClientsPage() {
     `)
     .eq('role', 'client')
     .order('created_at', { ascending: false });
+
+  // Fetch auth users to get invite/confirmation status
+  const { data: authData } = await adminSupabase.auth.admin.listUsers({ perPage: 100 });
+  const authUsers = authData?.users ?? [];
+
+  // Build a map of email → status
+  const statusMap = new Map<string, 'active' | 'pending'>();
+  for (const u of authUsers) {
+    if (!u.email) continue;
+    const hasSignedIn = !!u.last_sign_in_at;
+    const isConfirmed = !!u.email_confirmed_at;
+    statusMap.set(u.email, hasSignedIn || isConfirmed ? 'active' : 'pending');
+  }
 
   return (
     <div>
@@ -60,7 +76,7 @@ export default async function ClientsPage() {
                   Email
                 </th>
                 <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
-                  Empresa
+                  Estado
                 </th>
                 <th scope="col" className="px-4 py-3 text-left text-xs font-medium text-text-muted uppercase tracking-wider">
                   Proyectos
@@ -76,6 +92,8 @@ export default async function ClientsPage() {
                   Array.isArray(client.project_members) && client.project_members.length > 0
                     ? (client.project_members[0] as { count: number }).count
                     : 0;
+
+                const status = statusMap.get(client.email) ?? 'pending';
 
                 return (
                   <tr
@@ -93,8 +111,18 @@ export default async function ClientsPage() {
                       </div>
                     </td>
                     <td className="px-4 py-3 text-text-secondary">{client.email}</td>
-                    <td className="px-4 py-3 text-text-secondary">
-                      {client.company ?? <span className="text-text-muted">—</span>}
+                    <td className="px-4 py-3">
+                      {status === 'active' ? (
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-mint/10 text-mint border border-mint/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-mint" />
+                          Activo
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                          <span className="w-1.5 h-1.5 rounded-full bg-amber-400" />
+                          Pendiente
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-text-secondary">{memberCount}</td>
                     <td className="px-4 py-3 text-text-muted">

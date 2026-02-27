@@ -6,11 +6,11 @@ import { createBrowserClient } from '@/lib/supabase/client';
 import PageHeader from '@/components/dashboard/PageHeader';
 
 const CREDIT_REFERENCE = [
-  { label: 'Bug simple', cost: 2 },
-  { label: 'Bug complejo', cost: 4 },
-  { label: 'Feature pequena', cost: 6 },
-  { label: 'Feature mediana', cost: 12 },
-  { label: 'Feature grande', cost: 25 },
+  { label: 'Bug fix', cost: 0, note: 'Gratis' },
+  { label: 'Feature pequena', cost: 4 },
+  { label: 'Feature mediana', cost: 10 },
+  { label: 'Feature grande', cost: 20 },
+  { label: 'Bug externo', cost: 3 },
 ];
 
 const REQUEST_TYPES = [
@@ -34,7 +34,7 @@ export default function NewRequestPage() {
   const [projectId, setProjectId] = useState<string | null>(null);
   const [loadingProject, setLoadingProject] = useState(true);
 
-  const [type, setType] = useState('bug');
+  const [type, setType] = useState('feature');
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState('medium');
@@ -122,9 +122,13 @@ export default function NewRequestPage() {
               className="flex items-center justify-between gap-2 px-3 py-2 rounded-lg bg-white/[0.03] border border-white/5"
             >
               <span className="text-xs text-text-muted">{item.label}</span>
-              <span className="text-xs font-semibold text-primary tabular-nums shrink-0">
-                {item.cost} cr
-              </span>
+              {item.cost === 0 ? (
+                <span className="text-xs font-semibold text-mint shrink-0">Gratis</span>
+              ) : (
+                <span className="text-xs font-semibold text-primary tabular-nums shrink-0">
+                  {item.cost} cr
+                </span>
+              )}
             </div>
           ))}
         </div>

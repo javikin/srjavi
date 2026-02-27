@@ -47,8 +47,9 @@ export default async function PortalLayout({
   const { slug } = await params;
   const navItems = getNavItems(slug);
 
-  // Fetch project name for sidebar header
   const supabase = await createClient();
+
+  // Fetch current project
   const { data: project } = await supabase
     .from('projects')
     .select('id, name, status')
@@ -57,6 +58,23 @@ export default async function PortalLayout({
 
   if (!project) {
     redirect('/');
+  }
+
+  // Check if user has multiple projects (for switcher)
+  const { data: { user } } = await supabase.auth.getUser();
+  let otherProjects: { slug: string; name: string }[] = [];
+  if (user) {
+    const { data: memberships } = await supabase
+      .from('project_members')
+      .select('projects(slug, name)')
+      .eq('profile_id', user.id);
+
+    otherProjects = (memberships ?? [])
+      .map((m) => {
+        const p = Array.isArray(m.projects) ? m.projects[0] : m.projects;
+        return p as { slug: string; name: string } | null;
+      })
+      .filter((p): p is { slug: string; name: string } => p !== null && p.slug !== slug);
   }
 
   return (
@@ -70,7 +88,16 @@ export default async function PortalLayout({
               {project.name}
             </h2>
           </div>
-          <p className="text-xs text-text-muted pl-4">Portal del cliente</p>
+          {otherProjects.length > 0 ? (
+            <Link
+              href="/portal"
+              className="text-xs text-primary/70 hover:text-primary pl-4 transition-colors"
+            >
+              Cambiar proyecto
+            </Link>
+          ) : (
+            <p className="text-xs text-text-muted pl-4">Portal del cliente</p>
+          )}
         </div>
 
         <nav className="flex-1 p-4 space-y-1">
