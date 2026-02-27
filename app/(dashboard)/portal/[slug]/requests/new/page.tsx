@@ -1,10 +1,14 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { useRouter, useParams } from 'next/navigation';
+import Link from 'next/link';
 import { createBrowserClient } from '@/lib/supabase/client';
 import PageHeader from '@/components/dashboard/PageHeader';
 import CreditBar from '@/components/dashboard/CreditBar';
+import FileUploadZone from '@/components/dashboard/FileUploadZone';
+import AudioRecorder from '@/components/dashboard/AudioRecorder';
+import { useGemini } from '@/hooks/useGemini';
 
 // ---------------------------------------------------------------------------
 // Data definitions
@@ -63,6 +67,21 @@ const PRIORITIES = [
 ] as const;
 
 type PriorityValue = (typeof PRIORITIES)[number]['value'];
+
+// ---------------------------------------------------------------------------
+// Draft type
+// ---------------------------------------------------------------------------
+
+interface DraftData {
+  selectedCategory: CategoryId | null;
+  title: string;
+  description: string;
+  priority: PriorityValue;
+}
+
+// ---------------------------------------------------------------------------
+// Helpers
+// ---------------------------------------------------------------------------
 
 function getDescriptionPlaceholder(categoryId: CategoryId | null): string {
   if (!categoryId) {
@@ -156,6 +175,111 @@ function PriorityChip({ priority, selected, onSelect }: PriorityChipProps) {
 }
 
 // ---------------------------------------------------------------------------
+// Confirmation screen sub-component
+// ---------------------------------------------------------------------------
+
+interface ConfirmationScreenProps {
+  title: string;
+  estimatedCost: number | null;
+  attachmentCount: number;
+  slug: string;
+  onSendAnother: () => void;
+}
+
+function ConfirmationScreen({
+  title,
+  estimatedCost,
+  attachmentCount,
+  slug,
+  onSendAnother,
+}: ConfirmationScreenProps) {
+  const costLabel =
+    estimatedCost === null || estimatedCost === 0
+      ? 'Gratis'
+      : `~${estimatedCost} creditos`;
+
+  return (
+    <div className="max-w-2xl">
+      <div className="rounded-2xl bg-surface border border-white/5 px-8 py-12 flex flex-col items-center text-center gap-6">
+        {/* Check icon */}
+        <div className="flex items-center justify-center w-16 h-16 rounded-full bg-[#8AD8C0]/10 border border-[#8AD8C0]/20">
+          <svg
+            className="w-8 h-8 text-[#8AD8C0]"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+            aria-hidden="true"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+        </div>
+
+        {/* Heading */}
+        <div className="space-y-1">
+          <h2 className="text-xl font-semibold text-text-primary">Solicitud enviada</h2>
+          <p className="text-sm text-text-muted max-w-sm">
+            Tu equipo la revisara pronto y te notificara cuando sea aprobada.
+          </p>
+        </div>
+
+        {/* Details */}
+        <div className="w-full max-w-sm rounded-xl bg-background border border-white/5 divide-y divide-white/5">
+          <div className="flex items-center justify-between px-5 py-3">
+            <span className="text-xs text-text-muted">Titulo</span>
+            <span className="text-xs text-text-secondary font-medium text-right max-w-[60%] truncate">
+              {title}
+            </span>
+          </div>
+          <div className="flex items-center justify-between px-5 py-3">
+            <span className="text-xs text-text-muted">Costo estimado</span>
+            <span
+              className={[
+                'text-xs font-semibold tabular-nums',
+                estimatedCost === 0 || estimatedCost === null
+                  ? 'text-[#8AD8C0]'
+                  : 'text-text-secondary',
+              ].join(' ')}
+            >
+              {costLabel}
+            </span>
+          </div>
+          {attachmentCount > 0 && (
+            <div className="flex items-center justify-between px-5 py-3">
+              <span className="text-xs text-text-muted">Adjuntos</span>
+              <span className="text-xs text-text-secondary font-medium">
+                {attachmentCount} {attachmentCount === 1 ? 'archivo' : 'archivos'}
+              </span>
+            </div>
+          )}
+        </div>
+
+        {/* Action buttons */}
+        <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-sm">
+          <Link
+            href={`/portal/${slug}/requests`}
+            className="w-full inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-primary text-background text-sm font-semibold hover:bg-primary/90 transition-colors"
+          >
+            Ver solicitudes
+          </Link>
+          <button
+            type="button"
+            onClick={onSendAnother}
+            className="w-full inline-flex items-center justify-center px-5 py-2.5 rounded-lg border border-white/10 text-sm text-text-secondary hover:bg-white/5 hover:text-text-primary hover:border-white/20 transition-colors"
+          >
+            Enviar otra
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Page
 // ---------------------------------------------------------------------------
 
@@ -164,10 +288,15 @@ interface CreditData {
   used: number;
 }
 
+type SubmitPhase = 'idle' | 'creating' | 'uploading' | 'done';
+
+const DRAFT_KEY_PREFIX = 'draft_request_';
+
 export default function NewRequestPage() {
   const router = useRouter();
   const params = useParams<{ slug: string }>();
   const slug = params.slug;
+  const draftKey = `${DRAFT_KEY_PREFIX}${slug}`;
 
   // Project resolution
   const [projectId, setProjectId] = useState<string | null>(null);
@@ -181,10 +310,29 @@ export default function NewRequestPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [priority, setPriority] = useState<PriorityValue>('medium');
+  const [files, setFiles] = useState<File[]>([]);
 
-  // UI state
-  const [submitting, setSubmitting] = useState(false);
+  // Draft state
+  const [hasDraft, setHasDraft] = useState(false);
+  const [draftDismissed, setDraftDismissed] = useState(false);
+  const draftDebounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // AI state
+  const { generateText, loading: aiLoading } = useGemini();
+
+  // Submit state
+  const [submitPhase, setSubmitPhase] = useState<SubmitPhase>('idle');
+  const [uploadProgress, setUploadProgress] = useState({ current: 0, total: 0 });
   const [error, setError] = useState<string | null>(null);
+
+  // Post-submission confirmation
+  const [submittedRequest, setSubmittedRequest] = useState<{
+    title: string;
+    estimatedCost: number | null;
+    attachmentCount: number;
+  } | null>(null);
+
+  const submitting = submitPhase === 'creating' || submitPhase === 'uploading';
 
   // ---------------------------------------------------------------------------
   // Data fetching
@@ -194,7 +342,7 @@ export default function NewRequestPage() {
     async function bootstrap() {
       const supabase = createBrowserClient();
 
-      // Resolve slug → project ID
+      // Resolve slug to project ID
       const { data: project, error: projectError } = await supabase
         .from('projects')
         .select('id')
@@ -229,6 +377,132 @@ export default function NewRequestPage() {
   }, [slug]);
 
   // ---------------------------------------------------------------------------
+  // Draft recovery: check on mount
+  // ---------------------------------------------------------------------------
+
+  useEffect(() => {
+    try {
+      const raw = localStorage.getItem(draftKey);
+      if (raw) {
+        setHasDraft(true);
+      }
+    } catch {
+      // localStorage may be unavailable in some contexts
+    }
+  }, [draftKey]);
+
+  // ---------------------------------------------------------------------------
+  // Auto-save draft with debounce
+  // ---------------------------------------------------------------------------
+
+  const saveDraft = useCallback(() => {
+    if (draftDebounceRef.current) clearTimeout(draftDebounceRef.current);
+
+    draftDebounceRef.current = setTimeout(() => {
+      try {
+        const draft: DraftData = {
+          selectedCategory,
+          title,
+          description,
+          priority,
+        };
+        localStorage.setItem(draftKey, JSON.stringify(draft));
+      } catch {
+        // Ignore serialization errors
+      }
+    }, 2000);
+  }, [draftKey, selectedCategory, title, description, priority]);
+
+  // Trigger save whenever form fields change (skip if already submitted)
+  useEffect(() => {
+    if (submittedRequest) return;
+    // Only save if there's actual content to persist
+    if (!selectedCategory && !title && description === '' && priority === 'medium') return;
+    saveDraft();
+  }, [selectedCategory, title, description, priority, saveDraft, submittedRequest]);
+
+  // Cleanup debounce on unmount
+  useEffect(() => {
+    return () => {
+      if (draftDebounceRef.current) clearTimeout(draftDebounceRef.current);
+    };
+  }, []);
+
+  // ---------------------------------------------------------------------------
+  // Draft handlers
+  // ---------------------------------------------------------------------------
+
+  function handleContinueDraft() {
+    try {
+      const raw = localStorage.getItem(draftKey);
+      if (!raw) return;
+      const draft: DraftData = JSON.parse(raw);
+      if (draft.selectedCategory) setSelectedCategory(draft.selectedCategory);
+      if (draft.title) setTitle(draft.title);
+      if (draft.description) setDescription(draft.description);
+      if (draft.priority) setPriority(draft.priority);
+    } catch {
+      // Malformed draft — ignore
+    }
+    setHasDraft(false);
+    setDraftDismissed(true);
+  }
+
+  function handleDiscardDraft() {
+    try {
+      localStorage.removeItem(draftKey);
+    } catch {
+      // Ignore
+    }
+    setHasDraft(false);
+    setDraftDismissed(true);
+  }
+
+  // ---------------------------------------------------------------------------
+  // Reset form (used by "Enviar otra" button)
+  // ---------------------------------------------------------------------------
+
+  function resetForm() {
+    setSelectedCategory(null);
+    setTitle('');
+    setDescription('');
+    setPriority('medium');
+    setFiles([]);
+    setError(null);
+    setSubmitPhase('idle');
+    setSubmittedRequest(null);
+    setUploadProgress({ current: 0, total: 0 });
+  }
+
+  // ---------------------------------------------------------------------------
+  // AI description improvement
+  // ---------------------------------------------------------------------------
+
+  async function handleImproveDescription() {
+    if (!selectedCategory || description.length < 20) return;
+
+    const category = REQUEST_CATEGORIES.find((c) => c.id === selectedCategory);
+    if (!category) return;
+
+    const prompt = `Eres un asistente que ayuda a mejorar descripciones de tickets de soporte tecnico.
+
+Tipo de solicitud: ${category.label} (${category.description})
+Descripcion actual del usuario: "${description}"
+
+Mejora la descripcion para que sea mas clara, estructurada y util para el equipo de desarrollo.
+Si es un bug, organiza en: Pasos para reproducir, Resultado esperado, Resultado actual.
+Si es una feature, organiza en: Problema que resuelve, Comportamiento deseado, Contexto adicional.
+
+Mantén el tono del usuario. Responde SOLO con la descripcion mejorada, sin titulos ni explicaciones.
+Responde en espanol.`;
+
+    const result = await generateText(prompt);
+    if (result) {
+      setDescription(result.trim());
+    }
+  }
+
+  // ---------------------------------------------------------------------------
   // Derived values
   // ---------------------------------------------------------------------------
 
@@ -248,21 +522,33 @@ export default function NewRequestPage() {
     estimatedCost > availableCredits;
 
   const descriptionPlaceholder = getDescriptionPlaceholder(selectedCategory);
+  const canImproveWithAI = description.length >= 20 && !!selectedCategory;
+
+  const submitLabel = (() => {
+    if (submitPhase === 'creating') return 'Enviando solicitud...';
+    if (submitPhase === 'uploading') {
+      return `Subiendo archivos... (${uploadProgress.current}/${uploadProgress.total})`;
+    }
+    return null;
+  })();
 
   // ---------------------------------------------------------------------------
-  // Handlers
+  // Submit handler
   // ---------------------------------------------------------------------------
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!projectId || !selectedCategory) return;
 
-    setSubmitting(true);
+    setSubmitting_phase('creating');
     setError(null);
 
     const category = REQUEST_CATEGORIES.find((c) => c.id === selectedCategory)!;
 
+    let newRequestId: string | null = null;
+
     try {
+      // Phase 1: Create the request
       const res = await fetch(`/api/projects/${projectId}/requests`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -277,16 +563,71 @@ export default function NewRequestPage() {
       if (!res.ok) {
         const data = await res.json().catch(() => ({}));
         setError(data.error ?? 'No se pudo enviar la solicitud. Intenta de nuevo.');
-        setSubmitting(false);
+        setSubmitPhase('idle');
         return;
       }
 
-      router.push(`/portal/${slug}/requests`);
-      router.refresh();
+      const { data: newRequest } = await res.json();
+      newRequestId = newRequest.id;
+
+      // Phase 2: Upload files if any
+      if (files.length > 0 && newRequestId) {
+        setSubmitPhase('uploading');
+        setUploadProgress({ current: 0, total: files.length });
+
+        const supabase = createBrowserClient();
+        const {
+          data: { user },
+        } = await supabase.auth.getUser();
+
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          setUploadProgress({ current: i + 1, total: files.length });
+
+          const filePath = `${user?.id ?? 'unknown'}/${newRequestId}/${Date.now()}-${file.name}`;
+
+          const { error: uploadError } = await supabase.storage
+            .from('request-attachments')
+            .upload(filePath, file, { contentType: file.type, upsert: false });
+
+          if (!uploadError) {
+            // Register attachment in DB
+            await fetch(`/api/requests/${newRequestId}/attachments`, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                file_name: file.name,
+                file_url: filePath,
+                file_size: file.size,
+                mime_type: file.type,
+              }),
+            });
+          }
+        }
+      }
+
+      // Clear draft on success
+      try {
+        localStorage.removeItem(draftKey);
+      } catch {
+        // Ignore
+      }
+
+      setSubmitPhase('done');
+      setSubmittedRequest({
+        title: title.trim(),
+        estimatedCost,
+        attachmentCount: files.length,
+      });
     } catch {
       setError('Ocurrio un error inesperado. Intenta de nuevo.');
-      setSubmitting(false);
+      setSubmitPhase('idle');
     }
+  }
+
+  // Helper to set submit phase (used inside handleSubmit to avoid variable name conflict)
+  function setSubmitting_phase(phase: SubmitPhase) {
+    setSubmitPhase(phase);
   }
 
   // ---------------------------------------------------------------------------
@@ -302,11 +643,71 @@ export default function NewRequestPage() {
   }
 
   // ---------------------------------------------------------------------------
-  // Render: main page
+  // Render: confirmation screen
+  // ---------------------------------------------------------------------------
+
+  if (submittedRequest) {
+    return (
+      <ConfirmationScreen
+        title={submittedRequest.title}
+        estimatedCost={submittedRequest.estimatedCost}
+        attachmentCount={submittedRequest.attachmentCount}
+        slug={slug}
+        onSendAnother={resetForm}
+      />
+    );
+  }
+
+  // ---------------------------------------------------------------------------
+  // Render: main form
   // ---------------------------------------------------------------------------
 
   return (
     <div className="max-w-2xl">
+      {/* ------------------------------------------------------------------ */}
+      {/* Draft recovery banner                                               */}
+      {/* ------------------------------------------------------------------ */}
+      {hasDraft && !draftDismissed && (
+        <div className="mb-5 flex items-center justify-between gap-4 rounded-xl bg-surface border border-white/8 px-5 py-3.5">
+          <div className="flex items-center gap-3 min-w-0">
+            <svg
+              className="w-4 h-4 text-primary shrink-0"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={1.5}
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+              />
+            </svg>
+            <p className="text-sm text-text-secondary truncate">
+              Tienes un borrador guardado
+            </p>
+          </div>
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              type="button"
+              onClick={handleContinueDraft}
+              className="text-xs font-medium text-primary hover:text-primary/80 transition-colors focus:outline-none focus-visible:underline"
+            >
+              Continuar
+            </button>
+            <span className="text-white/20 text-xs">|</span>
+            <button
+              type="button"
+              onClick={handleDiscardDraft}
+              className="text-xs text-text-muted hover:text-text-secondary transition-colors focus:outline-none focus-visible:underline"
+            >
+              Descartar
+            </button>
+          </div>
+        </div>
+      )}
+
       <PageHeader
         title="Nueva solicitud"
         description="Describe lo que necesitas y te lo haremos saber pronto."
@@ -392,12 +793,48 @@ export default function NewRequestPage() {
 
           {/* Description */}
           <div>
-            <label
-              htmlFor="description"
-              className="block text-sm font-medium text-text-secondary mb-1.5"
-            >
-              Descripcion
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label
+                htmlFor="description"
+                className="text-sm font-medium text-text-secondary"
+              >
+                Descripcion
+              </label>
+              {canImproveWithAI && (
+                <button
+                  type="button"
+                  onClick={handleImproveDescription}
+                  disabled={aiLoading}
+                  className="inline-flex items-center gap-1.5 text-xs text-primary/70 hover:text-primary transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none focus-visible:underline"
+                  aria-label="Mejorar descripcion con IA"
+                >
+                  {aiLoading ? (
+                    <>
+                      <div className="w-3 h-3 border border-primary/60 border-t-transparent rounded-full animate-spin" />
+                      Mejorando...
+                    </>
+                  ) : (
+                    <>
+                      <svg
+                        className="w-3 h-3"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={1.5}
+                          d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09z"
+                        />
+                      </svg>
+                      Mejorar con IA
+                    </>
+                  )}
+                </button>
+              )}
+            </div>
             <textarea
               id="description"
               value={description}
@@ -407,6 +844,29 @@ export default function NewRequestPage() {
               placeholder={descriptionPlaceholder}
               className="w-full px-3 py-2.5 rounded-lg bg-background border border-white/10 text-text-primary text-sm placeholder:text-text-muted focus:outline-none focus:border-primary/50 focus:ring-1 focus:ring-primary/20 transition-colors resize-none"
             />
+          </div>
+
+          {/* File attachments */}
+          <div>
+            <div className="mb-2">
+              <span className="text-sm font-medium text-text-secondary">Adjuntos</span>
+              <p className="mt-0.5 text-xs text-text-muted">
+                Capturas de pantalla, PDFs o notas de voz
+              </p>
+            </div>
+            <FileUploadZone
+              files={files}
+              onFilesChange={setFiles}
+              maxFiles={5}
+              maxSizeMB={10}
+              disabled={submitting}
+            />
+            <div className="mt-3">
+              <AudioRecorder
+                onRecordingComplete={(file) => setFiles((prev) => [...prev, file])}
+                disabled={submitting}
+              />
+            </div>
           </div>
 
           {/* Priority chips */}
@@ -467,7 +927,7 @@ export default function NewRequestPage() {
             {submitting ? (
               <>
                 <div className="w-4 h-4 border-2 border-background border-t-transparent rounded-full animate-spin" />
-                Enviando...
+                {submitLabel}
               </>
             ) : (
               <>
