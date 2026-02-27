@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAuth, AuthError } from '@/lib/api-auth';
 import { createClient } from '@/lib/supabase/server';
+import { getOctokit } from '@/lib/github';
 
 export async function GET(
   _request: NextRequest,
@@ -94,10 +95,10 @@ export async function POST(
       );
     }
 
-    // Verify request exists and user has access
+    // Verify request exists and user has access (include github fields and project info)
     const { data: req } = await supabase
       .from('requests')
-      .select('project_id')
+      .select('project_id, github_issue_number, projects!project_id(github_repo_owner, github_repo_name)')
       .eq('id', id)
       .single();
 
@@ -128,12 +129,46 @@ export async function POST(
         author_id: user.id,
         body: commentBody,
         is_internal: is_internal ?? false,
+        source: 'dashboard',
       })
       .select('*, profiles!author_id(id, full_name, email, avatar_url)')
       .single();
 
     if (error) {
       return NextResponse.json({ error: 'Error al crear comentario' }, { status: 500 });
+    }
+
+    // Sync to GitHub if the request is linked to an issue and not an internal note
+    if (!is_internal && req.github_issue_number) {
+      const project = Array.isArray(req.projects) ? req.projects[0] : req.projects;
+      const repoOwner = project?.github_repo_owner;
+      const repoName = project?.github_repo_name;
+
+      if (repoOwner && repoName) {
+        try {
+          const authorName = comment.profiles?.full_name ?? 'Usuario';
+          const githubBody = `**${authorName}** comentó:\n\n${commentBody}`;
+
+          const octokit = getOctokit();
+          const { data: githubComment } = await octokit.issues.createComment({
+            owner: repoOwner,
+            repo: repoName,
+            issue_number: req.github_issue_number,
+            body: githubBody,
+          });
+
+          // Store the GitHub comment ID for future reference (fire-and-forget, non-blocking)
+          await supabase
+            .from('request_comments')
+            .update({ github_comment_id: githubComment.id })
+            .eq('id', comment.id);
+
+          comment.github_comment_id = githubComment.id;
+        } catch (githubError) {
+          // Fail gracefully: log the error but return the saved comment anyway
+          console.error('[comments] Error al sincronizar comentario con GitHub:', githubError);
+        }
+      }
     }
 
     return NextResponse.json({ data: comment }, { status: 201 });

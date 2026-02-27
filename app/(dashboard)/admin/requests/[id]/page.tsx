@@ -7,7 +7,6 @@ import PriorityBadge from '@/components/dashboard/PriorityBadge';
 import RequestActions from './RequestActions';
 import AddCommentForm from './AddCommentForm';
 
-type Status = 'pending' | 'approved' | 'in_progress' | 'completed' | 'rejected';
 type ReqType = 'bug' | 'feature' | 'improvement';
 type Priority = 'low' | 'medium' | 'high' | 'critical';
 
@@ -63,7 +62,7 @@ export default async function RequestDetailPage({
   const [{ data: comments }, { data: attachments }] = await Promise.all([
     supabase
       .from('request_comments')
-      .select('id, body, is_internal, created_at, profiles!request_comments_author_id_fkey(full_name)')
+      .select('id, body, is_internal, created_at, source, metadata, profiles!request_comments_author_id_fkey(full_name)')
       .eq('request_id', id)
       .order('created_at', { ascending: true }),
     supabase
@@ -106,7 +105,7 @@ export default async function RequestDetailPage({
             </h1>
             <div className="flex items-center gap-2 mb-4 flex-wrap">
               <RequestTypeBadge type={request.type as ReqType} />
-              <StatusBadge status={request.status as Status} />
+              <StatusBadge status={request.status as 'pending' | 'approved' | 'in_progress' | 'completed' | 'rejected'} />
               <PriorityBadge
                 priority={((request.admin_priority ?? request.priority_preference) as Priority)}
               />
@@ -147,14 +146,11 @@ export default async function RequestDetailPage({
             )}
           </div>
 
-          {/* Admin actions */}
+          {/* Admin actions (only shows if issue wasn't auto-created) */}
           <RequestActions
             requestId={request.id}
-            currentStatus={request.status as Status}
-            projectGithubOwner={project?.github_repo_owner ?? null}
-            projectGithubRepo={project?.github_repo_name ?? null}
-            requestTitle={request.title}
-            requestBody={request.description}
+            hasGithubIssue={!!request.github_issue_number}
+            hasGithubRepo={!!(project?.github_repo_owner && project?.github_repo_name)}
           />
 
           {/* Comments */}
@@ -168,23 +164,42 @@ export default async function RequestDetailPage({
                 {comments.map((comment) => {
                   const rawAuthor = comment.profiles as CommentProfileRow | CommentProfileRow[] | null;
                   const author = Array.isArray(rawAuthor) ? (rawAuthor[0] ?? null) : rawAuthor;
+                  const isGithub = comment.source === 'github';
+                  const meta = (comment.metadata ?? {}) as Record<string, unknown>;
+                  const authorName = isGithub
+                    ? (meta.author_login as string) ?? 'GitHub'
+                    : author?.full_name ?? 'Usuario';
                   return (
                     <li
                       key={comment.id}
                       className={`rounded-lg p-4 ${
                         comment.is_internal
                           ? 'bg-amber-500/5 border border-amber-500/20'
+                          : isGithub
+                          ? 'bg-white/[0.02] border border-white/5'
                           : 'bg-white/[0.03] border border-white/5'
                       }`}
                     >
                       <div className="flex items-center justify-between gap-2 mb-2">
-                        <span className="text-sm font-medium text-text-primary">
-                          {author?.full_name ?? 'Usuario'}
-                        </span>
+                        <div className="flex items-center gap-2">
+                          {isGithub && (
+                            <svg className="w-3.5 h-3.5 text-text-muted flex-shrink-0" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0112 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z" />
+                            </svg>
+                          )}
+                          <span className="text-sm font-medium text-text-primary">
+                            {authorName}
+                          </span>
+                        </div>
                         <div className="flex items-center gap-2">
                           {comment.is_internal && (
                             <span className="text-xs px-2 py-0.5 rounded-full bg-amber-500/10 text-amber-400 border border-amber-500/20">
                               Nota interna
+                            </span>
+                          )}
+                          {isGithub && (
+                            <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-text-muted border border-white/10">
+                              GitHub
                             </span>
                           )}
                           <time className="text-xs text-text-muted">

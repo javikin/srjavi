@@ -6,13 +6,15 @@ import PriorityBadge from '@/components/dashboard/PriorityBadge';
 import CommentsSection from './CommentsSection';
 
 const STATUS_STEPS = [
-  { key: 'pending', label: 'Pendiente' },
-  { key: 'approved', label: 'Aprobado' },
+  { key: 'pending', label: 'Enviada' },
   { key: 'in_progress', label: 'En progreso' },
   { key: 'completed', label: 'Completado' },
 ] as const;
 
-function StatusTimeline({ status }: { status: string }) {
+function StatusTimeline({ status: rawStatus }: { status: string }) {
+  // Map legacy statuses to GitHub-first flow
+  const status = rawStatus === 'approved' ? 'in_progress' : rawStatus;
+
   if (status === 'rejected') {
     return (
       <div className="flex items-center gap-2 py-4">

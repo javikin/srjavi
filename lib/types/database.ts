@@ -90,9 +90,12 @@ export interface Request {
 export interface RequestComment {
   id: string;
   request_id: string;
-  author_id: string;
+  author_id: string | null;
   body: string;
   is_internal: boolean;
+  github_comment_id: number | null;
+  source: 'dashboard' | 'github';
+  metadata: Record<string, unknown>;
   created_at: string;
 }
 
