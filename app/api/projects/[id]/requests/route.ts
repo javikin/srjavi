@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, requireProjectAccess, AuthError } from '@/lib/api-auth';
 import { createClient } from '@/lib/supabase/server';
+import { createGitHubIssue } from '@/lib/github';
+import type { Project, Request as RequestType } from '@/lib/types/database';
 
 export async function GET(
   request: NextRequest,
@@ -112,6 +114,45 @@ export async function POST(
       entity_id: req.id,
       metadata: { title, type },
     });
+
+    // Auto-create GitHub issue if project has a linked repo
+    const { data: project } = await supabase
+      .from('projects')
+      .select('*')
+      .eq('id', id)
+      .single();
+
+    if (project?.github_repo_owner && project?.github_repo_name) {
+      try {
+        const { number: issueNumber, url: issueUrl } = await createGitHubIssue(
+          req as unknown as RequestType,
+          project as Project,
+        );
+
+        await supabase
+          .from('requests')
+          .update({
+            github_issue_number: issueNumber,
+            github_issue_url: issueUrl,
+          })
+          .eq('id', req.id);
+
+        await supabase.from('activity_log').insert({
+          project_id: id,
+          actor_id: profile.id,
+          action: 'github_issue_created',
+          entity_type: 'request',
+          entity_id: req.id,
+          metadata: { github_issue_number: issueNumber, github_issue_url: issueUrl },
+        });
+
+        req.github_issue_number = issueNumber;
+        req.github_issue_url = issueUrl;
+      } catch (ghError) {
+        console.error('[github] Error al crear issue automáticamente:', ghError);
+        // No falla la solicitud, solo no se crea el issue
+      }
+    }
 
     return NextResponse.json({ data: req }, { status: 201 });
   } catch (error) {
