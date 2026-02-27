@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { requireAdmin, requireProjectAccess, AuthError } from '@/lib/api-auth';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import { createGitHubIssue } from '@/lib/github';
 import type { Project, Request as RequestType } from '@/lib/types/database';
 
@@ -116,11 +116,18 @@ export async function POST(
     });
 
     // Auto-create GitHub issue if project has a linked repo
-    const { data: project } = await supabase
+    // Use admin client to bypass RLS — this is a server-side operation
+    const adminSupabase = createAdminClient();
+
+    const { data: project, error: projectError } = await adminSupabase
       .from('projects')
       .select('*')
       .eq('id', id)
       .single();
+
+    if (projectError) {
+      console.error('[github] Error al leer proyecto para auto-crear issue:', projectError);
+    }
 
     if (project?.github_repo_owner && project?.github_repo_name) {
       try {
@@ -129,7 +136,7 @@ export async function POST(
           project as Project,
         );
 
-        await supabase
+        await adminSupabase
           .from('requests')
           .update({
             github_issue_number: issueNumber,
@@ -137,7 +144,7 @@ export async function POST(
           })
           .eq('id', req.id);
 
-        await supabase.from('activity_log').insert({
+        await adminSupabase.from('activity_log').insert({
           project_id: id,
           actor_id: profile.id,
           action: 'github_issue_created',
@@ -150,7 +157,6 @@ export async function POST(
         req.github_issue_url = issueUrl;
       } catch (ghError) {
         console.error('[github] Error al crear issue automáticamente:', ghError);
-        // No falla la solicitud, solo no se crea el issue
       }
     }
 
