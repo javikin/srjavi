@@ -69,28 +69,20 @@ export default function NewRequestPage() {
     setError(null);
 
     try {
-      const supabase = createBrowserClient();
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (!user) {
-        setError('Tu sesion expiro. Por favor inicia sesion nuevamente.');
-        setSubmitting(false);
-        return;
-      }
-
-      const { error: insertError } = await supabase
-        .from('requests')
-        .insert({
-          project_id: projectId,
-          submitted_by: user.id,
+      const res = await fetch(`/api/projects/${projectId}/requests`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
           type,
           title: title.trim(),
           description: description.trim(),
           priority_preference: priority,
-        });
+        }),
+      });
 
-      if (insertError) {
-        setError('No se pudo enviar la solicitud. Intenta de nuevo.');
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        setError(data.error ?? 'No se pudo enviar la solicitud. Intenta de nuevo.');
         setSubmitting(false);
         return;
       }
