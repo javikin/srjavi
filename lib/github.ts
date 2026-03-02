@@ -112,6 +112,46 @@ export async function verifyWebhookSignature(
   }
 }
 
+/**
+ * Adds a comment to an existing GitHub issue listing the request attachments.
+ * Uses signed URLs from Supabase Storage so the files are accessible from GitHub.
+ */
+export async function addAttachmentCommentToIssue(
+  owner: string,
+  repo: string,
+  issueNumber: number,
+  attachments: { file_name: string; mime_type: string; file_size: number; signedUrl: string }[],
+): Promise<void> {
+  if (attachments.length === 0) return;
+
+  const octokit = getOctokit();
+
+  const lines: string[] = ['## Archivos adjuntos', ''];
+
+  for (const att of attachments) {
+    const isImage = att.mime_type.startsWith('image/');
+    const isAudio = att.mime_type.startsWith('audio/');
+    const sizeKB = Math.round(att.file_size / 1024);
+
+    if (isImage) {
+      lines.push(`**${att.file_name}** (${sizeKB} KB)`);
+      lines.push(`![${att.file_name}](${att.signedUrl})`);
+      lines.push('');
+    } else if (isAudio) {
+      lines.push(`- 🎙️ **[${att.file_name}](${att.signedUrl})** — nota de voz (${sizeKB} KB)`);
+    } else {
+      lines.push(`- 📄 **[${att.file_name}](${att.signedUrl})** (${sizeKB} KB)`);
+    }
+  }
+
+  await octokit.issues.createComment({
+    owner,
+    repo,
+    issue_number: issueNumber,
+    body: lines.join('\n'),
+  });
+}
+
 // ---------------------------------------------------------------------------
 // Internal helpers
 // ---------------------------------------------------------------------------

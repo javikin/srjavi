@@ -604,6 +604,15 @@ Responde en espanol.`;
             });
           }
         }
+
+        // Sync attachments to GitHub issue (best-effort, non-blocking)
+        if (newRequestId) {
+          fetch(`/api/requests/${newRequestId}/sync-github-attachments`, {
+            method: 'POST',
+          }).catch(() => {
+            // Ignore — GitHub sync is best-effort
+          });
+        }
       }
 
       // Clear draft on success

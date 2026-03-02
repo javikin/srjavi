@@ -1,5 +1,5 @@
 import { redirect, notFound } from 'next/navigation';
-import { createClient } from '@/lib/supabase/server';
+import { createClient, createAdminClient } from '@/lib/supabase/server';
 import StatusBadge from '@/components/dashboard/StatusBadge';
 import RequestTypeBadge from '@/components/dashboard/RequestTypeBadge';
 import PriorityBadge from '@/components/dashboard/PriorityBadge';
@@ -144,6 +144,19 @@ export default async function RequestDetailPage({
     .eq('request_id', id)
     .order('created_at', { ascending: true });
 
+  // Generate signed URLs for attachments (storage paths need signed URLs for the private bucket)
+  const adminSupabase = createAdminClient();
+  const attachmentsWithUrls = attachments
+    ? await Promise.all(
+        attachments.map(async (att) => {
+          const { data } = await adminSupabase.storage
+            .from('request-attachments')
+            .createSignedUrl(att.file_url, 60 * 60 * 24); // 24 hours
+          return { ...att, signedUrl: data?.signedUrl ?? att.file_url };
+        })
+      )
+    : [];
+
   const priority = (request.admin_priority ?? request.priority_preference) as 'low' | 'medium' | 'high' | 'critical';
 
   function formatFileSize(bytes: number): string {
@@ -240,36 +253,92 @@ export default async function RequestDetailPage({
       </div>
 
       {/* Attachments */}
-      {attachments && attachments.length > 0 && (
+      {attachmentsWithUrls.length > 0 && (
         <div className="rounded-xl bg-surface border border-white/5 p-6">
           <h2 className="text-sm font-semibold text-text-secondary mb-4">
-            Archivos adjuntos ({attachments.length})
+            Archivos adjuntos ({attachmentsWithUrls.length})
           </h2>
-          <div className="space-y-2">
-            {attachments.map((att) => (
-              <a
-                key={att.id}
-                href={att.file_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.03] border border-white/5 transition-colors group"
-              >
-                <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
-                  <svg className="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+          <div className="space-y-3">
+            {attachmentsWithUrls.map((att) => {
+              const isAudio = att.mime_type?.startsWith('audio/');
+              const isImage = att.mime_type?.startsWith('image/');
+
+              if (isAudio) {
+                return (
+                  <div
+                    key={att.id}
+                    className="rounded-lg border border-white/5 bg-white/[0.02] p-4 space-y-2"
+                  >
+                    <div className="flex items-center gap-2">
+                      <svg className="w-4 h-4 text-primary shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 19V6l12-3v13M9 19c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zm12-3c0 1.105-1.343 2-3 2s-3-.895-3-2 1.343-2 3-2 3 .895 3 2zM9 10l12-3" />
+                      </svg>
+                      <span className="text-sm text-text-primary font-medium truncate">{att.file_name}</span>
+                      <span className="text-xs text-text-muted ml-auto shrink-0">{formatFileSize(att.file_size)}</span>
+                    </div>
+                    <audio
+                      controls
+                      preload="metadata"
+                      src={att.signedUrl}
+                      className="w-full h-10"
+                    />
+                  </div>
+                );
+              }
+
+              if (isImage) {
+                return (
+                  <div
+                    key={att.id}
+                    className="rounded-lg border border-white/5 bg-white/[0.02] overflow-hidden"
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={att.signedUrl}
+                      alt={att.file_name}
+                      className="w-full max-h-80 object-contain bg-black/20"
+                      loading="lazy"
+                    />
+                    <div className="flex items-center justify-between px-4 py-2 border-t border-white/5">
+                      <span className="text-xs text-text-muted truncate">{att.file_name} · {formatFileSize(att.file_size)}</span>
+                      <a
+                        href={att.signedUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-primary hover:underline shrink-0 ml-2"
+                      >
+                        Abrir
+                      </a>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <a
+                  key={att.id}
+                  href={att.signedUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 p-3 rounded-lg hover:bg-white/[0.03] border border-white/5 transition-colors group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-text-muted" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13" />
+                    </svg>
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-medium text-text-primary truncate group-hover:text-primary transition-colors">
+                      {att.file_name}
+                    </p>
+                    <p className="text-xs text-text-muted">{formatFileSize(att.file_size)}</p>
+                  </div>
+                  <svg className="w-4 h-4 text-text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
                   </svg>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-text-primary truncate group-hover:text-primary transition-colors">
-                    {att.file_name}
-                  </p>
-                  <p className="text-xs text-text-muted">{formatFileSize(att.file_size)}</p>
-                </div>
-                <svg className="w-4 h-4 text-text-muted shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-                </svg>
-              </a>
-            ))}
+                </a>
+              );
+            })}
           </div>
         </div>
       )}
